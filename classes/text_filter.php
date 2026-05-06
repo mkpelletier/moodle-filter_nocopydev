@@ -33,6 +33,19 @@ class text_filter extends \core_filters\text_filter {
 
     #[\Override]
     public function setup($page, $context) {
+        // Gate activation on the page's primary context, not the $context passed in.
+        // setup() runs once per filter_manager, and a manager is created per context —
+        // so when format_text() runs for inline module content (e.g. format_simple
+        // rendering mod_page bodies on the course view), setup() is called with that
+        // module context. If the filter is locally overridden ON anywhere in that
+        // module's context tree, this would inject the page-global lockdown JS even
+        // though the filter is off for the page itself. The lockdown is page-scoped,
+        // so it must reflect the page context's effective state.
+        $activefilters = filter_get_active_in_context($page->context);
+        if (!isset($activefilters['nocopydev'])) {
+            return;
+        }
+
         if (!$page->requires->should_create_one_time_item_now('filter_nocopydev-lockdown')) {
             return;
         }
