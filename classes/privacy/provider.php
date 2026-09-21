@@ -28,7 +28,6 @@ namespace filter_nocopydev\privacy;
  * Privacy provider - this filter does not store personal data.
  */
 class provider implements \core_privacy\local\metadata\null_provider {
-
     /**
      * Get the reason this plugin stores no data.
      *

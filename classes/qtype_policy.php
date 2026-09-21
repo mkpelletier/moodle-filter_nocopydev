@@ -29,7 +29,6 @@ namespace filter_nocopydev;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class qtype_policy {
-
     /**
      * Overlay the prompt only — used when the answer box must stay clean.
      */

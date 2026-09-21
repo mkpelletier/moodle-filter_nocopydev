@@ -25,7 +25,6 @@ namespace filter_nocopydev;
  * @covers     \filter_nocopydev\qtype_policy
  */
 final class qtype_policy_test extends \advanced_testcase {
-
     public function test_essay_has_honeypot_shortanswer_does_not(): void {
         $defs = qtype_policy::definitions();
 

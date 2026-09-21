@@ -25,7 +25,6 @@ namespace filter_nocopydev;
  * @covers     \filter_nocopydev\text_filter
  */
 final class text_filter_test extends \advanced_testcase {
-
     protected function setUp(): void {
         parent::setUp();
         $this->resetAfterTest();

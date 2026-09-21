@@ -25,7 +25,6 @@ namespace filter_nocopydev;
  * @covers     \filter_nocopydev\access
  */
 final class access_test extends \advanced_testcase {
-
     protected function setUp(): void {
         parent::setUp();
         $this->resetAfterTest();

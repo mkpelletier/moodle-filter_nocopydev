@@ -117,8 +117,8 @@ const patchTinySettings = (settings) => {
         return settings.map(patchTinySettings);
     }
     const patched = Object.assign({}, settings);
-    const existing = patched.removed_menuitems ? String(patched.removed_menuitems) : '';
-    patched.removed_menuitems = (existing + ' cut copy paste pastetext').trim();
+    const existing = patched['removed_menuitems'] ? String(patched['removed_menuitems']) : '';
+    patched['removed_menuitems'] = (existing + ' cut copy paste pastetext').trim();
     if (patched.menu && patched.menu.edit && patched.menu.edit.items) {
         patched.menu = Object.assign({}, patched.menu, {
             edit: Object.assign({}, patched.menu.edit, {

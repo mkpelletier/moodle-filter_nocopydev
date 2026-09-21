@@ -25,7 +25,6 @@ namespace filter_nocopydev\privacy;
  * @covers     \filter_nocopydev\privacy\provider
  */
 final class provider_test extends \core_privacy\tests\provider_testcase {
-
     public function test_get_reason(): void {
         $this->assertSame('privacy:metadata', provider::get_reason());
         $this->assertNotEmpty(get_string(provider::get_reason(), 'filter_nocopydev'));

@@ -33,7 +33,6 @@ namespace filter_nocopydev;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class honeypot {
-
     /** Filter name as stored in filter_config (no filter_ prefix). */
     public const FILTERNAME = 'nocopydev';
 
@@ -105,8 +104,10 @@ class honeypot {
             $hascustom = !empty($local['honeypot_author']) && !empty($local['honeypot_title']);
             // Off stops inheritance when this context (and more specific ones) have
             // not supplied their own author+title. A quiz can still opt back in.
-            if (!empty($local['honeypot_off']) && !$hascustom
-                    && $values['honeypot_author'] === '' && $values['honeypot_title'] === '') {
+            if (
+                !empty($local['honeypot_off']) && !$hascustom
+                && $values['honeypot_author'] === '' && $values['honeypot_title'] === ''
+            ) {
                 $blocked = true;
                 break;
             }
@@ -167,6 +168,8 @@ class honeypot {
     }
 
     /**
+     * Create a honeypot from explicit citation parts.
+     *
      * @param string $author Real author a marker will recognise.
      * @param string $title Fictional title that author never published.
      * @param string $venue Fictional or misapplied venue/year.
@@ -266,6 +269,8 @@ class honeypot {
     }
 
     /**
+     * Whether every citation field has been filled.
+     *
      * @param array<string, string> $values
      * @return bool
      */
@@ -279,6 +284,8 @@ class honeypot {
     }
 
     /**
+     * Strip tags and decode entities for title matching.
+     *
      * @param string $text
      * @return string
      */

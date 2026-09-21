@@ -47,11 +47,14 @@ if (!class_exists(\core_filters\local_settings_form::class, false)) {
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class nocopydev_filter_local_settings_form extends \core_filters\local_settings_form {
-
     #[\Override]
     protected function definition_inner($mform) {
-        $mform->addElement('static', 'localintro', '',
-            get_string('local_honeypot_intro', 'filter_nocopydev'));
+        $mform->addElement(
+            'static',
+            'localintro',
+            '',
+            get_string('local_honeypot_intro', 'filter_nocopydev')
+        );
 
         $inherited = \filter_nocopydev\honeypot::from_parent_context($this->context);
         if ($inherited->is_configured()) {
@@ -70,25 +73,43 @@ class nocopydev_filter_local_settings_form extends \core_filters\local_settings_
             );
         }
 
-        $mform->addElement('advcheckbox', 'honeypot_off',
+        $mform->addElement(
+            'advcheckbox',
+            'honeypot_off',
             get_string('local_honeypot_off', 'filter_nocopydev'),
-            get_string('local_honeypot_off_desc', 'filter_nocopydev'));
+            get_string('local_honeypot_off_desc', 'filter_nocopydev')
+        );
 
-        $mform->addElement('text', 'honeypot_author',
-            get_string('setting_honeypot_author', 'filter_nocopydev'), ['size' => 40]);
+        $mform->addElement(
+            'text',
+            'honeypot_author',
+            get_string('setting_honeypot_author', 'filter_nocopydev'),
+            ['size' => 40]
+        );
         $mform->setType('honeypot_author', PARAM_TEXT);
 
-        $mform->addElement('text', 'honeypot_title',
-            get_string('setting_honeypot_title', 'filter_nocopydev'), ['size' => 40]);
+        $mform->addElement(
+            'text',
+            'honeypot_title',
+            get_string('setting_honeypot_title', 'filter_nocopydev'),
+            ['size' => 40]
+        );
         $mform->setType('honeypot_title', PARAM_TEXT);
 
-        $mform->addElement('text', 'honeypot_venue',
-            get_string('setting_honeypot_venue', 'filter_nocopydev'), ['size' => 40]);
+        $mform->addElement(
+            'text',
+            'honeypot_venue',
+            get_string('setting_honeypot_venue', 'filter_nocopydev'),
+            ['size' => 40]
+        );
         $mform->setType('honeypot_venue', PARAM_TEXT);
 
-        $mform->addElement('textarea', 'honeypot_claim',
+        $mform->addElement(
+            'textarea',
+            'honeypot_claim',
             get_string('setting_honeypot_claim', 'filter_nocopydev'),
-            ['rows' => 3, 'cols' => 40]);
+            ['rows' => 3, 'cols' => 40]
+        );
         $mform->setType('honeypot_claim', PARAM_TEXT);
     }
 

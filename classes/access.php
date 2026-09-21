@@ -24,7 +24,6 @@ namespace filter_nocopydev;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class access {
-
     /**
      * Whether copy/paste lockdown should run on this page.
      *
@@ -105,6 +104,8 @@ class access {
     }
 
     /**
+     * Role ids for the student archetype.
+     *
      * @return int[]
      */
     private static function student_role_ids(): array {
@@ -116,6 +117,8 @@ class access {
     }
 
     /**
+     * Course id for the current page, if any.
+     *
      * @param \context $context
      * @param \stdClass|null $course
      * @return int

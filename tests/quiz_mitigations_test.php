@@ -25,7 +25,6 @@ namespace filter_nocopydev;
  * @covers     \filter_nocopydev\quiz_mitigations
  */
 final class quiz_mitigations_test extends \advanced_testcase {
-
     protected function setUp(): void {
         parent::setUp();
         $this->resetAfterTest();

@@ -31,11 +31,11 @@ const ENHANCED_ATTR = 'data-nocopydev-mitigated';
 const CONFIG_ID = 'filter-nocopydev-quiz-config';
 
 const DEFAULT_POLICY = {
-    dom_honeypot: false,
-    pixel_honeypot: false,
-    forensic_watermark: true,
-    block_print: true,
-    cover: 'formulation',
+    'dom_honeypot': false,
+    'pixel_honeypot': false,
+    'forensic_watermark': true,
+    'block_print': true,
+    'cover': 'formulation',
 };
 
 /**
@@ -85,7 +85,7 @@ const readPageConfig = () => {
  */
 const shouldBlockPrint = (config) => {
     const policies = config.policies || {};
-    return Object.values(policies).some((policy) => policy && policy.block_print);
+    return Object.values(policies).some((policy) => policy && policy['block_print']);
 };
 
 /**
@@ -144,13 +144,13 @@ const policyFor = (que, config) => {
  */
 const applyMitigations = (que, config) => {
     const policy = policyFor(que, config);
-    const cover = resolveCover(que, policy.cover);
+    const cover = resolveCover(que, policy['cover']);
 
-    if (config.domhoneypot && policy.dom_honeypot) {
+    if (config.domhoneypot && policy['dom_honeypot']) {
         injectDomHoneypot(que, config);
     }
 
-    if (config.forensicwatermark && (policy.forensic_watermark || policy.pixel_honeypot)) {
+    if (config.forensicwatermark && (policy['forensic_watermark'] || policy['pixel_honeypot'])) {
         injectWatermark(cover, watermarkText(policy, config));
     }
 };
@@ -225,7 +225,7 @@ const matchingBackground = (el) => {
 const watermarkText = (policy, config) => {
     const token = config.token || '';
     const parts = [];
-    if (policy.pixel_honeypot && config.honeypot && config.honeypot.shortlabel) {
+    if (policy['pixel_honeypot'] && config.honeypot && config.honeypot.shortlabel) {
         parts.push(config.honeypot.shortlabel);
     } else if (config.watermarklabel) {
         parts.push(config.watermarklabel);

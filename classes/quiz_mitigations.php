@@ -24,7 +24,6 @@ namespace filter_nocopydev;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class quiz_mitigations {
-
     /**
      * Whether this page should receive quiz-specific mitigations.
      *
@@ -103,7 +102,7 @@ class quiz_mitigations {
         global $CFG;
 
         $material = $attemptid . ':' . $userid . ':' . $contextid;
-        // passwordsaltmain is not set on new Moodle 5.3 installs (Whoops treats
+        // Passwordsaltmain is not set on new Moodle 5.3 installs (Whoops treats
         // the undefined $CFG property as an error). Fall back to the site id.
         $secret = !empty($CFG->passwordsaltmain) ? $CFG->passwordsaltmain : get_site_identifier();
         return substr(hash_hmac('sha256', $material, $secret), 0, 8);

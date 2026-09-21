@@ -1,3 +1,4 @@
+/* stylelint-disable declaration-no-important -- print hide and camouflage must beat theme rules */
 .filter-nocopydev-honeypot {
     margin: 0;
     padding: 0;
@@ -66,6 +67,7 @@ body.filter-nocopydev-quizattempt .que select,
 body.filter-nocopydev-quizattempt .que [contenteditable="true"],
 body.filter-nocopydev-quizattempt .que .editor_atto,
 body.filter-nocopydev-quizattempt .que .tox,
+/* stylelint-disable-next-line selector-type-no-unknown -- MathJax custom element */
 body.filter-nocopydev-quizattempt .que mjx-container,
 body.filter-nocopydev-quizattempt .que .MathJax,
 body.filter-nocopydev-quizattempt .que svg {

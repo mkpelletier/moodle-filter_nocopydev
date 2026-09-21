@@ -16,8 +16,6 @@
 
 namespace filter_nocopydev;
 
-require_once(__DIR__ . '/access.php');
-
 /**
  * Filter that injects JavaScript to prevent copy/paste and developer tools access.
  *
@@ -30,7 +28,6 @@ require_once(__DIR__ . '/access.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class text_filter extends \core_filters\text_filter {
-
     /** @var bool Whether the noscript block has been injected on this page. */
     private static bool $noscriptinjected = false;
 
@@ -58,13 +55,17 @@ class text_filter extends \core_filters\text_filter {
             return;
         }
 
-        if (access::should_lockdown($page)
-                && $page->requires->should_create_one_time_item_now('filter_nocopydev-lockdown')) {
+        if (
+            access::should_lockdown($page)
+            && $page->requires->should_create_one_time_item_now('filter_nocopydev-lockdown')
+        ) {
             $page->requires->js_call_amd('filter_nocopydev/lockdown', 'init');
         }
 
-        if (quiz_mitigations::is_attempt_page($page)
-                && $page->requires->should_create_one_time_item_now('filter_nocopydev-quiz-mitigations')) {
+        if (
+            quiz_mitigations::is_attempt_page($page)
+            && $page->requires->should_create_one_time_item_now('filter_nocopydev-quiz-mitigations')
+        ) {
             quiz_mitigations::require_amd($page);
         }
     }
