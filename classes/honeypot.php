@@ -271,7 +271,7 @@ class honeypot {
     /**
      * Whether every citation field has been filled.
      *
-     * @param array<string, string> $values
+     * @param array $values Resolved citation field values.
      * @return bool
      */
     private static function values_complete(array $values): bool {
