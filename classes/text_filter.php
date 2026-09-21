@@ -16,10 +16,13 @@
 
 namespace filter_nocopydev;
 
+require_once(__DIR__ . '/access.php');
+
 /**
  * Filter that injects JavaScript to prevent copy/paste and developer tools access.
  *
- * This filter uses setup() to inject a page-wide AMD lockdown script once per page.
+ * This filter uses setup() to inject a page-wide AMD lockdown script once per page,
+ * and quiz-attempt mitigations (citation honeypot, forensic watermark) on attempt pages.
  * The filter() method injects a <noscript> overlay to block access when JS is disabled.
  *
  * @package    filter_nocopydev
@@ -30,6 +33,15 @@ class text_filter extends \core_filters\text_filter {
 
     /** @var bool Whether the noscript block has been injected on this page. */
     private static bool $noscriptinjected = false;
+
+    /**
+     * Reset per-page noscript state (used by unit tests).
+     *
+     * @return void
+     */
+    public static function reset_caches(): void {
+        self::$noscriptinjected = false;
+    }
 
     #[\Override]
     public function setup($page, $context) {
@@ -46,18 +58,27 @@ class text_filter extends \core_filters\text_filter {
             return;
         }
 
-        if (!$page->requires->should_create_one_time_item_now('filter_nocopydev-lockdown')) {
-            return;
+        if (access::should_lockdown($page)
+                && $page->requires->should_create_one_time_item_now('filter_nocopydev-lockdown')) {
+            $page->requires->js_call_amd('filter_nocopydev/lockdown', 'init');
         }
 
-        $page->requires->js_call_amd('filter_nocopydev/lockdown', 'init');
+        if (quiz_mitigations::is_attempt_page($page)
+                && $page->requires->should_create_one_time_item_now('filter_nocopydev-quiz-mitigations')) {
+            quiz_mitigations::require_amd($page);
+        }
     }
 
     #[\Override]
     public function filter($text, array $options = []) {
         // Inject the noscript overlay once per page on the first filtered text block.
+        // Skip for roles that are not copy-restricted, except quiz attempt/preview.
         if (!self::$noscriptinjected) {
             self::$noscriptinjected = true;
+            global $PAGE;
+            if (!($PAGE instanceof \moodle_page) || !access::should_lockdown($PAGE)) {
+                return $text;
+            }
             $warning = get_string('noscriptwarning', 'filter_nocopydev');
             $noscript = '<noscript><div style="position:fixed;top:0;left:0;width:100%;height:100%;'
                 . 'background:#fff;z-index:999999;display:flex;align-items:center;justify-content:center;'

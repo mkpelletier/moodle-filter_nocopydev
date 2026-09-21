@@ -82,9 +82,86 @@ const blockEvent = (e) => {
  *
  * @param {object} editor A TinyMCE editor instance.
  */
+const TINY_CLIPBOARD_UI = ['copy', 'cut', 'paste', 'pastetext'];
+
+/**
+ * Drop cut/copy/paste tokens from a TinyMCE menu items string.
+ *
+ * @param {string} items
+ * @returns {string}
+ */
+const stripClipboardMenuItems = (items) => {
+    if (typeof items !== 'string') {
+        return items;
+    }
+    return items
+        .replace(/\b(cut|copy|paste|pastetext)\b/gi, '')
+        .replace(/\s+/g, ' ')
+        .replace(/\|\s*\|/g, '|')
+        .replace(/^\s*\||\|\s*$/g, '')
+        .trim();
+};
+
+/**
+ * Ensure TinyMCE never puts cut/copy/paste in the Edit menu.
+ * Moodle builds that menu at init from removed_menuitems + menu.edit.items.
+ *
+ * @param {object|object[]} settings
+ * @returns {object|object[]}
+ */
+const patchTinySettings = (settings) => {
+    if (!settings || typeof settings !== 'object') {
+        return settings;
+    }
+    if (Array.isArray(settings)) {
+        return settings.map(patchTinySettings);
+    }
+    const patched = Object.assign({}, settings);
+    const existing = patched.removed_menuitems ? String(patched.removed_menuitems) : '';
+    patched.removed_menuitems = (existing + ' cut copy paste pastetext').trim();
+    if (patched.menu && patched.menu.edit && patched.menu.edit.items) {
+        patched.menu = Object.assign({}, patched.menu, {
+            edit: Object.assign({}, patched.menu.edit, {
+                items: stripClipboardMenuItems(patched.menu.edit.items),
+            }),
+        });
+    }
+    return patched;
+};
+
+/**
+ * Hide any clipboard controls that slipped into the rendered chrome.
+ *
+ * @param {ParentNode} root
+ */
+const hideTinyClipboardNodes = (root) => {
+    if (!root || !root.querySelectorAll) {
+        return;
+    }
+    root.querySelectorAll('[data-mce-name]').forEach((el) => {
+        const name = (el.getAttribute('data-mce-name') || '').toLowerCase();
+        if (TINY_CLIPBOARD_UI.indexOf(name) !== -1) {
+            el.hidden = true;
+            el.setAttribute('aria-hidden', 'true');
+            el.style.display = 'none';
+        }
+    });
+};
+
+/**
+ * Lock down a single TinyMCE editor instance.
+ *
+ * @param {object} editor A TinyMCE editor instance.
+ */
 const lockdownEditor = (editor) => {
+    if (editor.__nocopydevLocked) {
+        return;
+    }
+    editor.__nocopydevLocked = true;
+
     editor.on('paste copy cut contextmenu', (e) => {
         e.preventDefault();
+        e.stopPropagation();
     });
     editor.on('keydown', (e) => {
         const ctrl = e.ctrlKey || e.metaKey;
@@ -104,25 +181,54 @@ const lockdownEditor = (editor) => {
             e.preventDefault();
         }
     });
+    const hide = () => {
+        hideTinyClipboardNodes(editor.getContainer());
+        hideTinyClipboardNodes(document.body);
+    };
+    if (editor.initialized) {
+        hide();
+    } else {
+        editor.on('init', hide);
+    }
+};
+
+/**
+ * Wrap tinymce.init so Moodle's editor is created without clipboard menu items.
+ *
+ * @returns {boolean} True if TinyMCE is present and patched.
+ */
+const installTinyPatch = () => {
+    if (typeof window.tinymce === 'undefined') {
+        return false;
+    }
+    if (window.tinymce.__nocopydevPatched) {
+        return true;
+    }
+    window.tinymce.__nocopydevPatched = true;
+
+    const originalInit = window.tinymce.init.bind(window.tinymce);
+    window.tinymce.init = (settings) => originalInit(patchTinySettings(settings));
+
+    window.tinymce.on('AddEditor', (e) => {
+        lockdownEditor(e.editor);
+    });
+    window.tinymce.get().forEach(lockdownEditor);
+    return true;
 };
 
 /**
  * Find and lock down all current and future TinyMCE editors.
  */
 const lockdownTinyMCE = () => {
-    if (typeof window.tinymce === 'undefined') {
+    if (installTinyPatch()) {
         return;
     }
-
-    // Lock down any editors that already exist.
-    window.tinymce.get().forEach(lockdownEditor);
-
-    // Lock down editors that get created later.
-    window.tinymce.on('AddEditor', (e) => {
-        e.editor.on('init', () => {
-            lockdownEditor(e.editor);
-        });
-    });
+    const started = Date.now();
+    const timer = window.setInterval(() => {
+        if (installTinyPatch() || Date.now() - started > 20000) {
+            window.clearInterval(timer);
+        }
+    }, 20);
 };
 
 /**
@@ -148,18 +254,33 @@ export const init = () => {
             -webkit-user-select: auto !important;
             user-select: auto !important;
         }
+        .tox [data-mce-name="copy"],
+        .tox [data-mce-name="cut"],
+        .tox [data-mce-name="paste"],
+        .tox [data-mce-name="pastetext"],
+        .tox-tinymce-aux [data-mce-name="copy"],
+        .tox-tinymce-aux [data-mce-name="cut"],
+        .tox-tinymce-aux [data-mce-name="paste"],
+        .tox-tinymce-aux [data-mce-name="pastetext"],
+        .tox-silver-sink [data-mce-name="copy"],
+        .tox-silver-sink [data-mce-name="cut"],
+        .tox-silver-sink [data-mce-name="paste"],
+        .tox-silver-sink [data-mce-name="pastetext"] {
+            display: none !important;
+        }
     `;
     document.head.appendChild(style);
 
-    // Lock down TinyMCE - may not be loaded yet, so also watch for it.
     lockdownTinyMCE();
-    if (typeof window.tinymce === 'undefined') {
-        const observer = new MutationObserver(() => {
-            if (typeof window.tinymce !== 'undefined') {
-                observer.disconnect();
-                lockdownTinyMCE();
-            }
+    const observer = new MutationObserver((mutations) => {
+        installTinyPatch();
+        mutations.forEach((mutation) => {
+            mutation.addedNodes.forEach((node) => {
+                if (node.nodeType === 1) {
+                    hideTinyClipboardNodes(node);
+                }
+            });
         });
-        observer.observe(document.body, {childList: true, subtree: true});
-    }
+    });
+    observer.observe(document.documentElement, {childList: true, subtree: true});
 };

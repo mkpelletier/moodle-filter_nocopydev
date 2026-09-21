@@ -14,17 +14,20 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace filter_nocopydev\privacy;
+
 /**
- * Version information for filter_nocopydev.
+ * Privacy provider tests.
  *
  * @package    filter_nocopydev
  * @copyright  2026 Mathieu Pelletier
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @covers     \filter_nocopydev\privacy\provider
  */
+final class provider_test extends \core_privacy\tests\provider_testcase {
 
-defined('MOODLE_INTERNAL') || die();
-
-$plugin->version   = 2026092101;
-$plugin->requires  = 2025040800;
-$plugin->release   = '1.1.1';
-$plugin->component = 'filter_nocopydev';
+    public function test_get_reason(): void {
+        $this->assertSame('privacy:metadata', provider::get_reason());
+        $this->assertNotEmpty(get_string(provider::get_reason(), 'filter_nocopydev'));
+    }
+}
