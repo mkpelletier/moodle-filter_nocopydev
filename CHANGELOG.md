@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.1.2 (2026-09-22)
+
+### Fixed
+- Question stems keep author colours (for example a red directional he in
+  Hebrew). The Safari PDF transparent-fill CSS had forced a single shadow
+  ink over the stem.
+- Gapfill and Cloze blanks nested in the stem stay typeable. Those inputs
+  inherited the transparent ink, sat under the forensic overlay, and were
+  blocked by body-level `user-select: none`.
+
 ## v1.1.1 (2026-09-21)
 
 ### Fixed

@@ -43,45 +43,20 @@
 }
 
 /*
- * Safari File > Export as PDF uses Quartz on the *screen* render, so @media
- * print never applies. Transparent fill + 0-blur text-shadow still looks like
- * normal text on screen; many PDF text extractors drop the shadow and emit
- * empty glyphs. Form controls and math are left alone so the attempt stays usable.
- * A graphical snapshot (what Quartz often produces) will still show the text;
- * the forensic watermark is the remaining signal on that path.
+ * Gapfill (and Cloze) put inputs/selects inside .qtext, under the forensic
+ * overlay (z-index 2). Lift those widgets so they stay typeable and so
+ * body { user-select: none } from lockdown.js cannot swallow keystrokes.
+ * Do not force colour or -webkit-text-fill-color on stems: author colour
+ * (e.g. a red directional he) must remain visible, and nested gaps inherit
+ * that ink.
  */
-body.filter-nocopydev-quizattempt .que .qtext,
-body.filter-nocopydev-quizattempt .que .prompt,
-body.filter-nocopydev-quizattempt .que .subquestion,
-body.filter-nocopydev-quizattempt .que .answer label,
-body.filter-nocopydev-quizattempt .que .answer .text {
-    --filter-nocopydev-ink: CanvasText;
-    color: transparent !important;
-    -webkit-text-fill-color: transparent !important;
-    text-shadow: 0 0 0 var(--filter-nocopydev-ink);
-}
-
 body.filter-nocopydev-quizattempt .que input,
 body.filter-nocopydev-quizattempt .que textarea,
 body.filter-nocopydev-quizattempt .que select,
 body.filter-nocopydev-quizattempt .que [contenteditable="true"],
-body.filter-nocopydev-quizattempt .que .editor_atto,
-body.filter-nocopydev-quizattempt .que .tox,
-body.filter-nocopydev-quizattempt .que .MathJax,
-body.filter-nocopydev-quizattempt .que svg {
-    color: inherit !important;
-    -webkit-text-fill-color: currentColor !important;
-    text-shadow: none !important;
-}
-
-@media (prefers-contrast: more) {
-    body.filter-nocopydev-quizattempt .que .qtext,
-    body.filter-nocopydev-quizattempt .que .prompt,
-    body.filter-nocopydev-quizattempt .que .subquestion,
-    body.filter-nocopydev-quizattempt .que .answer label,
-    body.filter-nocopydev-quizattempt .que .answer .text {
-        color: inherit !important;
-        -webkit-text-fill-color: unset !important;
-        text-shadow: none !important;
-    }
+body.filter-nocopydev-quizattempt .que .draggable {
+    -webkit-user-select: text !important;
+    user-select: text !important;
+    position: relative;
+    z-index: 3;
 }

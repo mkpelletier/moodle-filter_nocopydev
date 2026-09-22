@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2026092101;
+$plugin->version   = 2026092200;
 $plugin->requires  = 2025040800;
-$plugin->release   = '1.1.1';
+$plugin->release   = '1.1.2';
 $plugin->component = 'filter_nocopydev';

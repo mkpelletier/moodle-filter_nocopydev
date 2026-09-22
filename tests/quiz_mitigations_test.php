@@ -53,6 +53,22 @@ final class quiz_mitigations_test extends \advanced_testcase {
         $this->assertNotEquals($one, $other);
     }
 
+    /**
+     * Stem CSS must not force transparent ink; nested gapfill inputs stay typeable.
+     *
+     * @coversNothing
+     */
+    public function test_attempt_css_preserves_author_colour_and_gap_inputs(): void {
+        $css = file_get_contents(dirname(__DIR__) . '/styles.css');
+        $this->assertNotFalse($css);
+        $this->assertStringNotContainsString('color: transparent', $css);
+        $this->assertStringNotContainsString('--filter-nocopydev-ink', $css);
+        $this->assertStringNotContainsString('-webkit-text-fill-color: transparent', $css);
+        $this->assertStringNotContainsString('color: inherit !important', $css);
+        $this->assertStringContainsString('user-select: text', $css);
+        $this->assertStringContainsString('z-index: 3', $css);
+    }
+
     public function test_js_config_includes_honeypot_and_policies(): void {
         global $PAGE, $USER;
 

@@ -242,18 +242,19 @@ export const init = () => {
     document.addEventListener('paste', blockEvent, true);
     document.addEventListener('contextmenu', blockEvent, true);
 
-    // Disable text selection globally, allow it in editors for formatting.
+    // Disable text selection globally; keep form controls and editors typeable.
     const style = document.createElement('style');
     style.textContent = `
         body {
             -webkit-user-select: none;
             user-select: none;
         }
+        input, textarea, select, button,
         [contenteditable="true"],
         .tox, .tox-tinymce, .tox *,
         .editor_atto, .editor_atto * {
-            -webkit-user-select: auto !important;
-            user-select: auto !important;
+            -webkit-user-select: text !important;
+            user-select: text !important;
         }
         .tox [data-mce-name="copy"],
         .tox [data-mce-name="cut"],

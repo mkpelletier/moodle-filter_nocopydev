@@ -48,7 +48,7 @@ For exam security, a typical setup is to set it to "Off, but available" at the s
 
 Copy, paste, and the context menu are blocked only for the roles chosen under **Site administration → Plugins → Filters → No Copy / Dev Tools** (Student by default). Teachers reviewing or reporting on attempts are not locked unless they also have a restricted role in that course. **Preview quiz** (an in-progress attempt page) still applies the lockdown so staff can test the filter. **Switch role to Student** also applies it.
 
-Print / “Save as PDF” from the print dialog is blanked with `@media print`. Safari **File → Export as PDF** does not use print CSS (it snapshots the screen). That path cannot be made blank without hiding the quiz from the student. The plugin uses transparent text plus a 0-blur shadow so some PDF extractors get empty glyphs; a graphical Safari PDF will still show the questions and should carry the forensic watermark.
+Print / “Save as PDF” from the print dialog is blanked with `@media print`. Safari **File → Export as PDF** does not use print CSS (it snapshots the screen). That path cannot be made blank without hiding the quiz from the student; a graphical Safari PDF will still show the questions and should carry the forensic watermark. Author colours in the stem (for example a red letter in a Hebrew gapfill) are left intact, and answer inputs nested in the stem stay typeable.
 
 ### Citation honeypot (per course)
 
