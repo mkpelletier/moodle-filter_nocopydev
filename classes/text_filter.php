@@ -20,8 +20,10 @@ namespace filter_nocopydev;
  * Filter that injects JavaScript to prevent copy/paste and developer tools access.
  *
  * This filter uses setup() to inject a page-wide AMD lockdown script once per page,
- * and quiz-attempt mitigations (citation honeypot, forensic watermark) on attempt pages.
- * The filter() method injects a <noscript> overlay to block access when JS is disabled.
+ * quiz-attempt mitigations (citation honeypot, forensic watermark) on attempt pages,
+ * and the citation honeypot on Q&A forum questions.
+ * The filter() method injects a <noscript> overlay to block access when JS is disabled,
+ * and highlights the fictional honeypot title for markers.
  *
  * @package    filter_nocopydev
  * @copyright  2026 Mathieu Pelletier
@@ -59,7 +61,11 @@ class text_filter extends \core_filters\text_filter {
             access::should_lockdown($page)
             && $page->requires->should_create_one_time_item_now('filter_nocopydev-lockdown')
         ) {
-            $page->requires->js_call_amd('filter_nocopydev/lockdown', 'init');
+            // Forum replies are often drafted elsewhere, and a pasted reply
+            // brings the honeypot back verbatim. Copying out stays blocked.
+            $page->requires->js_call_amd('filter_nocopydev/lockdown', 'init', [
+                ['allowpaste' => forum_mitigations::is_forum_page($page)],
+            ]);
         }
 
         if (
@@ -68,10 +74,19 @@ class text_filter extends \core_filters\text_filter {
         ) {
             quiz_mitigations::require_amd($page);
         }
+
+        if (
+            forum_mitigations::is_forum_page($page)
+            && $page->requires->should_create_one_time_item_now('filter_nocopydev-forum-mitigations')
+        ) {
+            forum_mitigations::require_amd($page);
+        }
     }
 
     #[\Override]
     public function filter($text, array $options = []) {
+        $text = $this->highlight_honeypot_hits($text);
+
         // Inject the noscript overlay once per page on the first filtered text block.
         // Skip for roles that are not copy-restricted, except quiz attempt/preview.
         if (!self::$noscriptinjected) {
@@ -89,5 +104,25 @@ class text_filter extends \core_filters\text_filter {
             return $noscript . $text;
         }
         return $text;
+    }
+
+    /**
+     * Mark the fictional honeypot title wherever a marker reads student work.
+     *
+     * The honeypot itself is added in the browser, so the title only reaches
+     * this text when someone has written it into a response.
+     *
+     * @param string $text
+     * @return string
+     */
+    private function highlight_honeypot_hits($text) {
+        if (!is_string($text) || $text === '') {
+            return $text;
+        }
+        $honeypot = honeypot::from_context($this->context);
+        if (!$honeypot->is_configured() || !has_capability('filter/nocopydev:viewhoneypothits', $this->context)) {
+            return $text;
+        }
+        return $honeypot->highlight_in($text);
     }
 }

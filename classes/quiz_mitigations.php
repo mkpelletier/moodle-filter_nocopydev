@@ -115,7 +115,7 @@ class quiz_mitigations {
      * @param bool $default
      * @return bool
      */
-    private static function config_enabled(string $name, bool $default = true): bool {
+    public static function config_enabled(string $name, bool $default = true): bool {
         $raw = get_config('filter_nocopydev', $name);
         if ($raw === false || $raw === '') {
             return $default;

@@ -248,9 +248,66 @@ class honeypot {
             return false;
         }
 
-        $plain = \core_text::strtolower($this->strip_html($text));
-        $title = \core_text::strtolower($this->title);
-        return $title !== '' && \core_text::strpos($plain, $title) !== false;
+        return preg_match($this->title_pattern(), $this->strip_html($text)) === 1;
+    }
+
+    /**
+     * Wrap every occurrence of the fictional title in a marker-facing highlight.
+     *
+     * Only text between tags is searched, so attributes and URLs are left
+     * alone. A title split by inline markup part-way through is not matched.
+     *
+     * @param string $html Filtered HTML about to be displayed.
+     * @return string
+     */
+    public function highlight_in(string $html): string {
+        if (!$this->is_configured() || $html === '') {
+            return $html;
+        }
+
+        $segments = preg_split('~(<[^>]*>)~', $html, -1, PREG_SPLIT_DELIM_CAPTURE);
+        if ($segments === false) {
+            return $html;
+        }
+
+        $pattern = $this->title_pattern();
+        $open = '<mark class="filter-nocopydev-hit" title="' . s(get_string('honeypot_hit', 'filter_nocopydev')) . '">';
+        foreach ($segments as $index => $segment) {
+            // Odd indexes are the captured tags.
+            if ($index % 2 === 1 || $segment === '') {
+                continue;
+            }
+            $marked = preg_replace_callback($pattern, fn(array $match): string => $open . $match[0] . '</mark>', $segment);
+            if ($marked !== null) {
+                $segments[$index] = $marked;
+            }
+        }
+        return implode('', $segments);
+    }
+
+    /**
+     * Case-insensitive regex for the title, as it may appear in student HTML.
+     *
+     * Tolerates whatever an editor or a model does to spacing, apostrophes
+     * and ampersands (non-breaking spaces, curly quotes, HTML entities).
+     *
+     * @return string
+     */
+    private function title_pattern(): string {
+        $apostrophe = "(?:'|\u{2019}|\u{2018}|&\\#0?39;|&apos;|&rsquo;|&lsquo;)";
+        $words = [];
+        foreach (preg_split('/\s+/u', $this->title, -1, PREG_SPLIT_NO_EMPTY) as $word) {
+            $pattern = '';
+            foreach (mb_str_split($word) as $char) {
+                $pattern .= match ($char) {
+                    "'", "\u{2019}", "\u{2018}" => $apostrophe,
+                    '&' => '(?:&amp;|&)',
+                    default => preg_quote($char, '~'),
+                };
+            }
+            $words[] = $pattern;
+        }
+        return '~' . implode('(?:\s|\x{00A0}|&nbsp;|&\#160;)+', $words) . '~iu';
     }
 
     /**

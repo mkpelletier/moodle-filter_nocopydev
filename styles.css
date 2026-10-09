@@ -17,6 +17,15 @@
     text-shadow: none !important;
 }
 
+/* Marker-only highlight of the fictional title in student work. */
+.filter-nocopydev-hit {
+    padding: 0 0.15em;
+    color: #000;
+    background-color: #ffd866;
+    outline: 2px solid #b45309;
+    border-radius: 2px;
+}
+
 .filter-nocopydev-watermark {
     position: absolute;
     inset: 0;

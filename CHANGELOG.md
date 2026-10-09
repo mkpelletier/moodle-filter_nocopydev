@@ -1,5 +1,24 @@
 # Changelog
 
+## v1.2.0 (2026-10-09)
+
+### Added
+- Q&A forum citation honeypot. The question post of every discussion in a
+  Q&A forum carries the hidden citation for restricted roles. Other forum
+  types are not baited: there the first student to take the bait would
+  publish it to the class. Forums get no watermark.
+- Markers see the fictional title highlighted wherever a student has
+  written it (forum posts, quiz responses). Controlled by the new
+  capability `filter/nocopydev:viewhoneypothits` (teacher, non-editing
+  teacher, manager by default). Nothing is stored.
+- Forum settings section with a switch for the Q&A honeypot.
+
+### Changed
+- On forum pages paste is allowed, so a reply drafted elsewhere still
+  works. Copy, cut, select and the context menu stay blocked.
+- Title matching tolerates curly apostrophes, non-breaking spaces and
+  HTML entities.
+
 ## v1.1.2 (2026-09-22)
 
 ### Fixed

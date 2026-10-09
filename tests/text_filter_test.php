@@ -69,4 +69,31 @@ final class text_filter_test extends \advanced_testcase {
         $out = $filter->filter('Teacher content');
         $this->assertSame('Teacher content', $out);
     }
+
+    public function test_filter_highlights_honeypot_title_for_teacher_only(): void {
+        global $PAGE;
+
+        honeypot::reset_caches();
+        $course = $this->getDataGenerator()->create_course();
+        $forum = $this->getDataGenerator()->create_module('forum', ['course' => $course->id, 'type' => 'qanda']);
+        $context = \context_module::instance($forum->cmid);
+        filter_set_local_config('nocopydev', $context->id, 'honeypot_author', 'Craig Keener');
+        filter_set_local_config('nocopydev', $context->id, 'honeypot_title', 'The Mercy Seat of the Nations');
+        $post = '<p>Keener, in The Mercy Seat of the Nations, argues otherwise.</p>';
+
+        $PAGE->set_url('/mod/forum/discuss.php', ['d' => 1]);
+        $PAGE->set_context($context);
+        $PAGE->set_pagetype('mod-forum-discuss');
+
+        $this->setUser($this->getDataGenerator()->create_and_enrol($course, 'editingteacher'));
+        $out = (new text_filter($context, []))->filter($post);
+        $this->assertStringContainsString(
+            '>The Mercy Seat of the Nations</mark>',
+            $out
+        );
+
+        $this->setUser($this->getDataGenerator()->create_and_enrol($course, 'student'));
+        $out = (new text_filter($context, []))->filter($post);
+        $this->assertStringNotContainsString('<mark', $out);
+    }
 }

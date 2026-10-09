@@ -72,6 +72,19 @@ $settings->add(new admin_setting_configtext(
 ));
 
 $settings->add(new admin_setting_heading(
+    'filter_nocopydev/forumheading',
+    get_string('setting_forumheading', 'filter_nocopydev'),
+    get_string('setting_forumheading_desc', 'filter_nocopydev')
+));
+
+$settings->add(new admin_setting_configcheckbox(
+    'filter_nocopydev/enable_forum_honeypot',
+    get_string('setting_enable_forum_honeypot', 'filter_nocopydev'),
+    get_string('setting_enable_forum_honeypot_desc', 'filter_nocopydev'),
+    1
+));
+
+$settings->add(new admin_setting_heading(
     'filter_nocopydev/honeypotheading',
     get_string('setting_honeypotheading', 'filter_nocopydev'),
     get_string('setting_honeypotheading_desc', 'filter_nocopydev')

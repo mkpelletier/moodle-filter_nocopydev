@@ -137,4 +137,26 @@ final class honeypot_test extends \advanced_testcase {
         $this->assertSame('Quiz Author', $honeypot->author);
         $this->assertSame('Quiz Title', $honeypot->title);
     }
+
+    public function test_highlight_wraps_title_in_text_only(): void {
+        $honeypot = new honeypot('N.T. Wright', 'Paul’s Gospel & the Nations', '');
+
+        $html = '<p title="Paul’s Gospel &amp; the Nations">As Wright argues in '
+            . '<em>paul\'s&nbsp;gospel &amp; the  nations</em>, the point stands.</p>';
+        $out = $honeypot->highlight_in($html);
+
+        $this->assertSame(1, substr_count($out, '<mark class="filter-nocopydev-hit"'));
+        $this->assertStringContainsString('>paul\'s&nbsp;gospel &amp; the  nations</mark>', $out);
+        // The attribute copy of the title is left alone.
+        $this->assertStringContainsString('<p title="Paul’s Gospel &amp; the Nations">', $out);
+        $this->assertTrue($honeypot->appears_in($html));
+    }
+
+    public function test_highlight_leaves_clean_text_untouched(): void {
+        $honeypot = new honeypot('N.T. Wright', 'The Mercy Seat of the Nations', '');
+        $html = '<p>Wright on the mercy seat, and on the nations.</p>';
+
+        $this->assertSame($html, $honeypot->highlight_in($html));
+        $this->assertSame($html, (new honeypot('', '', ''))->highlight_in($html));
+    }
 }

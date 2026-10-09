@@ -13,7 +13,9 @@ A Moodle filter plugin that prevents copy/paste, right-click context menus, and 
 - Displays a full-page blocking overlay when JavaScript is disabled
 - Per-context toggling: can be enabled/disabled at site, category, course, or activity level
 - Quiz-attempt layers by question type (citation honeypot on essays; forensic watermark on MCQ, true/false, matching, and short answer)
-- Citation honeypot configurable per category, course, or quiz
+- Citation honeypot on Q&A forum questions (paste stays allowed on forum pages)
+- Fictional title highlighted for markers wherever a student has written it
+- Citation honeypot configurable per category, course, quiz, or forum
 
 ## Automated tests
 
@@ -68,6 +70,22 @@ Site administration defaults are only a fallback. Prefer leaving them empty so e
 When marking, search scripts for the fictional **title**. Author-alone is too common in legitimate essays.
 
 Selected-response items (multiple choice, true/false, matching) do not receive the citation. Their submission is a click, so the canary cannot come back. Those items get a bland forensic watermark instead.
+
+### Q&A forums
+
+Enable the filter on a **Q&A forum** and set a citation on the forum or its course, exactly as for a quiz. The question post of every discussion then carries the hidden citation for restricted roles (Student by default). Staff never receive it; use **Switch role to Student** to check.
+
+Only the Q&A type is baited. A student there cannot read anyone else's answer before posting their own, so a fictional title in a first answer can only have come from the question. In any other forum type the first student to take the bait shows it to the whole class, and later citations prove nothing. After a student has answered they can read peers' posts, so treat a title that first appears in a later reply as weaker evidence.
+
+On every forum page **paste is allowed** for students. Replies are often drafted elsewhere, and a pasted AI answer brings the citation back unedited. Copying out, selecting, and the context menu stay blocked. Forums get no watermark.
+
+Not covered: forum notification emails, the Moodle mobile app, and RSS deliver the question as plain copyable text with no citation, because the honeypot is added in the browser. Do not force subscription on a baited forum.
+
+A screen reader will speak the hidden citation on every visit, not during one sitting as in a quiz.
+
+### Highlight for markers
+
+Users with `filter/nocopydev:viewhoneypothits` (teachers and managers by default) see the fictional title highlighted wherever the filter is active and a student has written it: forum posts and quiz responses. Nothing is logged or stored; a student who edits the title out during the forum's editing window leaves no trace.
 
 ## Important Notes
 

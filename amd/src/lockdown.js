@@ -33,6 +33,17 @@ const BLOCKED_CTRL_KEYS = {
     'u': true, // View source.
 };
 
+/** @var {boolean} Forum pages let students paste in a reply drafted elsewhere. */
+let allowPaste = false;
+
+/**
+ * Whether Ctrl/Cmd + key is a blocked shortcut.
+ *
+ * @param {string} key Lower-case key name.
+ * @returns {boolean}
+ */
+const isBlockedCtrlKey = (key) => !!BLOCKED_CTRL_KEYS[key] && !(allowPaste && key === 'v');
+
 const BLOCKED_SHIFT_KEYS = {
     'i': true, // Dev tools.
     'j': true, // Console.
@@ -63,7 +74,7 @@ const handleKeydown = (e) => {
         return;
     }
 
-    if (BLOCKED_CTRL_KEYS[key]) {
+    if (isBlockedCtrlKey(key)) {
         e.preventDefault();
     }
 };
@@ -83,6 +94,14 @@ const blockEvent = (e) => {
  * @param {object} editor A TinyMCE editor instance.
  */
 const TINY_CLIPBOARD_UI = ['copy', 'cut', 'paste', 'pastetext'];
+const TINY_PASTE_UI = ['paste', 'pastetext'];
+
+/**
+ * TinyMCE clipboard controls to remove on this page.
+ *
+ * @returns {string[]}
+ */
+const blockedTinyUi = () => TINY_CLIPBOARD_UI.filter((name) => !allowPaste || TINY_PASTE_UI.indexOf(name) === -1);
 
 /**
  * Drop cut/copy/paste tokens from a TinyMCE menu items string.
@@ -95,7 +114,7 @@ const stripClipboardMenuItems = (items) => {
         return items;
     }
     return items
-        .replace(/\b(cut|copy|paste|pastetext)\b/gi, '')
+        .replace(new RegExp('\\b(' + blockedTinyUi().join('|') + ')\\b', 'gi'), '')
         .replace(/\s+/g, ' ')
         .replace(/\|\s*\|/g, '|')
         .replace(/^\s*\||\|\s*$/g, '')
@@ -119,7 +138,7 @@ const patchTinySettings = (settings) => {
     const patched = Object.assign({}, settings);
     const removedMenuItemsKey = 'removed_menuitems';
     const existing = patched[removedMenuItemsKey] ? String(patched[removedMenuItemsKey]) : '';
-    patched[removedMenuItemsKey] = (existing + ' cut copy paste pastetext').trim();
+    patched[removedMenuItemsKey] = (existing + ' ' + blockedTinyUi().join(' ')).trim();
     if (patched.menu && patched.menu.edit && patched.menu.edit.items) {
         patched.menu = Object.assign({}, patched.menu, {
             edit: Object.assign({}, patched.menu.edit, {
@@ -141,7 +160,7 @@ const hideTinyClipboardNodes = (root) => {
     }
     root.querySelectorAll('[data-mce-name]').forEach((el) => {
         const name = (el.getAttribute('data-mce-name') || '').toLowerCase();
-        if (TINY_CLIPBOARD_UI.indexOf(name) !== -1) {
+        if (blockedTinyUi().indexOf(name) !== -1) {
             el.hidden = true;
             el.setAttribute('aria-hidden', 'true');
             el.style.display = 'none';
@@ -160,7 +179,7 @@ const lockdownEditor = (editor) => {
     }
     editor.__nocopydevLocked = true;
 
-    editor.on('paste copy cut contextmenu', (e) => {
+    editor.on((allowPaste ? '' : 'paste ') + 'copy cut contextmenu', (e) => {
         e.preventDefault();
         e.stopPropagation();
     });
@@ -178,7 +197,7 @@ const lockdownEditor = (editor) => {
             e.preventDefault();
             return;
         }
-        if (BLOCKED_CTRL_KEYS[key]) {
+        if (isBlockedCtrlKey(key)) {
             e.preventDefault();
         }
     });
@@ -233,13 +252,29 @@ const lockdownTinyMCE = () => {
 };
 
 /**
- * Initialise the lockdown module.
+ * CSS selector list for the TinyMCE clipboard controls removed on this page.
+ *
+ * @returns {string}
  */
-export const init = () => {
+const hiddenTinySelectors = () => ['.tox', '.tox-tinymce-aux', '.tox-silver-sink']
+    .flatMap((root) => blockedTinyUi().map((name) => root + ' [data-mce-name="' + name + '"]'))
+    .join(',\n        ');
+
+/**
+ * Initialise the lockdown module.
+ *
+ * @param {Object} [options]
+ * @param {boolean} [options.allowpaste] Leave paste working (copy-out stays blocked).
+ */
+export const init = (options) => {
+    allowPaste = !!(options && options.allowpaste);
+
     document.addEventListener('keydown', handleKeydown, true);
     document.addEventListener('copy', blockEvent, true);
     document.addEventListener('cut', blockEvent, true);
-    document.addEventListener('paste', blockEvent, true);
+    if (!allowPaste) {
+        document.addEventListener('paste', blockEvent, true);
+    }
     document.addEventListener('contextmenu', blockEvent, true);
 
     // Disable text selection globally; keep form controls and editors typeable.
@@ -256,18 +291,7 @@ export const init = () => {
             -webkit-user-select: text !important;
             user-select: text !important;
         }
-        .tox [data-mce-name="copy"],
-        .tox [data-mce-name="cut"],
-        .tox [data-mce-name="paste"],
-        .tox [data-mce-name="pastetext"],
-        .tox-tinymce-aux [data-mce-name="copy"],
-        .tox-tinymce-aux [data-mce-name="cut"],
-        .tox-tinymce-aux [data-mce-name="paste"],
-        .tox-tinymce-aux [data-mce-name="pastetext"],
-        .tox-silver-sink [data-mce-name="copy"],
-        .tox-silver-sink [data-mce-name="cut"],
-        .tox-silver-sink [data-mce-name="paste"],
-        .tox-silver-sink [data-mce-name="pastetext"] {
+        ${hiddenTinySelectors()} {
             display: none !important;
         }
     `;

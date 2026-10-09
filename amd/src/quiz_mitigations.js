@@ -29,6 +29,8 @@
 
 /* eslint-disable camelcase -- PHP qtype policy keys use Moodle snake_case. */
 
+import {injectHoneypot, parseRgb} from 'filter_nocopydev/camouflage';
+
 const ENHANCED_ATTR = 'data-nocopydev-mitigated';
 const CONFIG_ID = 'filter-nocopydev-quiz-config';
 
@@ -170,11 +172,7 @@ const resolveCover = (que, cover) => {
 };
 
 /**
- * Same-colour-as-background paragraph at the end of the stem.
- *
- * In-flow real text (not opacity 0) so page extractors keep it. Not
- * aria-hidden: Leo drops those nodes. Colour is sampled from the question
- * background (fallback #fff). Faculty should know screen readers will speak it.
+ * Camouflaged citation at the end of the stem.
  *
  * @param {Element} que
  * @param {Object} config
@@ -186,37 +184,7 @@ const injectDomHoneypot = (que, config) => {
     }
 
     const host = que.querySelector('.qtext') || que.querySelector('.formulation') || que;
-    if (host.querySelector('.filter-nocopydev-honeypot')) {
-        return;
-    }
-
-    host.appendChild(document.createComment(' ' + instruction + ' '));
-
-    const camouflage = matchingBackground(host);
-    const para = document.createElement('p');
-    para.className = 'filter-nocopydev-honeypot';
-    para.textContent = instruction;
-    para.style.setProperty('--filter-nocopydev-camouflage', camouflage);
-    para.style.color = camouflage;
-    host.appendChild(para);
-};
-
-/**
- * First opaque background in the ancestor chain, else white.
- *
- * @param {Element} el
- * @returns {string}
- */
-const matchingBackground = (el) => {
-    let node = el;
-    while (node && node !== document.documentElement) {
-        const rgb = parseRgb(window.getComputedStyle(node).backgroundColor);
-        if (rgb && rgb.a > 0) {
-            return 'rgb(' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ')';
-        }
-        node = node.parentElement;
-    }
-    return '#fff';
+    injectHoneypot(host, instruction);
 };
 
 /**
@@ -273,25 +241,6 @@ const inkColor = (el) => {
         return 'rgba(255,255,255,0.55)';
     }
     return 'rgba(0,0,0,0.55)';
-};
-
-/**
- * @param {string} value
- * @returns {?Object}
- */
-const parseRgb = (value) => {
-    const match = value && value.match(
-        /rgba?\(\s*([0-9.]+)\s*,\s*([0-9.]+)\s*,\s*([0-9.]+)(?:\s*,\s*([0-9.]+))?\s*\)/i
-    );
-    if (!match) {
-        return null;
-    }
-    return {
-        r: Number(match[1]),
-        g: Number(match[2]),
-        b: Number(match[3]),
-        a: match[4] === undefined ? 1 : Number(match[4]),
-    };
 };
 
 /**
