@@ -26,8 +26,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-/* eslint-disable camelcase -- option keys are the PHP config names. */
-
 /**
  * Ctrl/Cmd + key shortcuts and the option that blocks each.
  */

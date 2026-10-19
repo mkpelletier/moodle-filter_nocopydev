@@ -125,7 +125,7 @@ class lockdown_options {
     /**
      * Whether anything at all is blocked.
      *
-     * @param array<string, bool> $values
+     * @param bool[] $values Switches keyed by option.
      * @return bool
      */
     public static function any_blocked(array $values): bool {
