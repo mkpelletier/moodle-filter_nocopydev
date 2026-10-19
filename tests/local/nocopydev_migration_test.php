@@ -79,8 +79,8 @@ final class nocopydev_migration_test extends \advanced_testcase {
         // Filter states, with the old site-level slot.
         $site = $DB->get_record('filter_active', ['filter' => 'tripwire', 'contextid' => $syscontext->id]);
         $this->assertEquals(TEXTFILTER_OFF, $site->active);
-        $this->assertEquals(TEXTFILTER_ON, $DB->get_field('filter_active', 'active',
-            ['filter' => 'tripwire', 'contextid' => $coursecontext->id]));
+        $courseactive = $DB->get_field('filter_active', 'active', ['filter' => 'tripwire', 'contextid' => $coursecontext->id]);
+        $this->assertEquals(TEXTFILTER_ON, $courseactive);
 
         // Local citation.
         $this->assertSame('The Romans Roadway', filter_get_local_config('tripwire', $coursecontext->id)['honeypot_title']);
@@ -91,8 +91,8 @@ final class nocopydev_migration_test extends \advanced_testcase {
         ]));
 
         // Old filter is off everywhere.
-        $this->assertEquals(TEXTFILTER_DISABLED, $DB->get_field('filter_active', 'active',
-            ['filter' => 'nocopydev', 'contextid' => $syscontext->id]));
+        $oldactive = $DB->get_field('filter_active', 'active', ['filter' => 'nocopydev', 'contextid' => $syscontext->id]);
+        $this->assertEquals(TEXTFILTER_DISABLED, $oldactive);
 
         // A second run changes nothing.
         $this->assertTrue(nocopydev_migration::run());
