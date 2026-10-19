@@ -8,6 +8,12 @@
   all use the new name. Moodle installs it as a new plugin: settings from
   `filter_nocopydev` are not carried over.
 
+### Added
+- Capability `filter/tripwire:skiphoneypot` excuses a user from the quiz and
+  forum citation honeypot, for students whose screen reader would speak
+  it. No role has it by default; grant it through a role assigned at system
+  level so course staff cannot see who holds it.
+
 ## v1.3.0 (2026-10-19)
 
 ### Added

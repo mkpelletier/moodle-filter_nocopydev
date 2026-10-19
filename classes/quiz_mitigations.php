@@ -46,7 +46,9 @@ class quiz_mitigations {
     public static function js_config(\moodle_page $page): array {
         global $USER;
 
-        $honeypot = honeypot::from_context($page->context);
+        $honeypot = access::skips_honeypot($page->context)
+            ? new honeypot('', '', '')
+            : honeypot::from_context($page->context);
         $attemptid = (int) $page->url->get_param('attempt');
         $token = self::forensic_token($attemptid, (int) $USER->id, (int) $page->context->id);
 

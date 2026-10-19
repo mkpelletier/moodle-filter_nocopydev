@@ -78,7 +78,8 @@ class forum_mitigations {
         $honeypot = honeypot::from_context($page->context);
         $enabled = quiz_mitigations::config_enabled('enable_forum_honeypot')
             && $honeypot->is_configured()
-            && access::lockdown_applies($page->context);
+            && access::lockdown_applies($page->context)
+            && !access::skips_honeypot($page->context);
 
         return [
             'enabled' => $enabled,

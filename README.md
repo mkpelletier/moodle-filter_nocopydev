@@ -65,7 +65,7 @@ Print / “Save as PDF” from the print dialog is blanked with `@media print`. 
 
 ### Citation honeypot (per course)
 
-On quiz attempt pages, **essay** questions receive a hidden scholarly instruction: a **real author** paired with a **fictional work**. It is white-on-white at the end of the stem (copy/select is blocked). Tools that scrape visible page text — including Brave Leo — often cite it. A marker who knows the field will spot the fake title immediately. Screen readers will speak it; faculty should not treat that citation as proof of cheating for a known reader user. Short-answer items do not get the canary.
+On quiz attempt pages, **essay** questions receive a hidden scholarly instruction: a **real author** paired with a **fictional work**. It is white-on-white at the end of the stem (copy/select is blocked). Tools that scrape visible page text — including Brave Leo — often cite it. A marker who knows the field will spot the fake title immediately. Screen readers will speak it, so students who use one should be excused (see *Assessment arrangements* below). Short-answer items do not get the canary.
 
 Set this on the **course**, not the site, so the author belongs on that reading list:
 
@@ -93,6 +93,19 @@ On every forum page **paste is allowed** for students. Replies are often drafted
 Not covered: forum notification emails, the Moodle mobile app, and RSS deliver the question as plain copyable text with no citation, because the honeypot is added in the browser. Do not force subscription on a baited forum.
 
 A screen reader will speak the hidden citation on every visit, not during one sitting as in a quiz.
+
+### Assessment arrangements
+
+Screen readers and AI page readers see the same hidden text, so the honeypot cannot be hidden from one and not the other. Students who use assistive technology are excused instead: users with `filter/tripwire:skiphoneypot` receive no citation in quizzes or forums. Lockdown and the forensic watermark still apply.
+
+No role has the capability by default. To set it up:
+
+1. Create a role (for example *Assessment arrangement*) that can be assigned in the **System** context, with `filter/tripwire:skiphoneypot` allowed and nothing else.
+2. Assign it under **Site administration → Users → Permissions → Assign system roles**, at the request of the student and your disability or accommodations office.
+
+Assign it at system level only. Roles assigned in a course appear on its Participants page; system roles do not, so teachers never learn who is excused. The name records an arrangement, not a reason. The plugin stores nothing about these users and shows no difference to markers. Site administrators can still see who holds the role.
+
+Site administrators are not excused automatically, so Preview quiz still shows them the citation.
 
 ### Highlight for markers
 

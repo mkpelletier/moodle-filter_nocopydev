@@ -93,4 +93,34 @@ final class quiz_mitigations_test extends \advanced_testcase {
         $this->assertMatchesRegularExpression('/^[0-9a-f]{8}$/', $config['token']);
         $this->assertNotEmpty($USER->id);
     }
+
+    public function test_exempt_student_gets_no_honeypot(): void {
+        global $PAGE;
+
+        set_config('honeypot_author', 'Craig Keener', 'filter_tripwire');
+        set_config('honeypot_title', 'The Mercy Seat of the Nations', 'filter_tripwire');
+
+        $course = $this->getDataGenerator()->create_course();
+        $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
+        $roleid = $this->getDataGenerator()->create_role(['shortname' => 'arrangement']);
+        assign_capability('filter/tripwire:skiphoneypot', CAP_ALLOW, $roleid, \context_system::instance());
+        role_assign($roleid, $student->id, \context_system::instance());
+        $this->setUser($student);
+
+        $PAGE->set_url('/mod/quiz/attempt.php', ['attempt' => 42]);
+        $PAGE->set_context(\context_course::instance($course->id));
+        $PAGE->set_pagetype('mod-quiz-attempt');
+
+        $config = quiz_mitigations::js_config($PAGE);
+        $this->assertFalse($config['domhoneypot']);
+        $this->assertSame('', $config['honeypot']['instruction']);
+        $this->assertSame('', $config['honeypot']['shortlabel']);
+
+        // Everything else still applies.
+        $this->assertTrue($config['enabled']);
+        $this->assertTrue($config['forensicwatermark']);
+        $this->assertMatchesRegularExpression('/^[0-9a-f]{8}$/', $config['token']);
+        $this->assertTrue(access::should_lockdown($PAGE));
+        $this->assertNotContains(false, lockdown_options::for_page($PAGE));
+    }
 }

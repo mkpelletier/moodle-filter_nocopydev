@@ -17,7 +17,7 @@
 namespace filter_tripwire;
 
 /**
- * Role checks for the copy/paste lockdown.
+ * Role checks for the copy/paste lockdown and the honeypot exemption.
  *
  * @package    filter_tripwire
  * @copyright  2026 Mathieu Pelletier
@@ -77,6 +77,19 @@ class access {
         }
 
         return false;
+    }
+
+    /**
+     * Whether the current user is excused from the citation honeypot.
+     *
+     * Admins are not excused through doanything, so Preview quiz still shows
+     * them the bait.
+     *
+     * @param \context $context
+     * @return bool
+     */
+    public static function skips_honeypot(\context $context): bool {
+        return has_capability('filter/tripwire:skiphoneypot', $context, null, false);
     }
 
     /**

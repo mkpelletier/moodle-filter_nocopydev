@@ -111,6 +111,29 @@ final class forum_mitigations_test extends \advanced_testcase {
         $this->assertSame([], $config['postids']);
     }
 
+    public function test_exempt_student_is_not_baited(): void {
+        global $PAGE;
+
+        $course = $this->getDataGenerator()->create_course();
+        $this->set_up_forum_page($course, 'qanda');
+        $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
+        $roleid = $this->getDataGenerator()->create_role(['shortname' => 'arrangement']);
+        assign_capability('filter/tripwire:skiphoneypot', CAP_ALLOW, $roleid, \context_system::instance());
+        role_assign($roleid, $student->id, \context_system::instance());
+        $this->setUser($student);
+
+        $config = forum_mitigations::js_config($PAGE);
+        $this->assertFalse($config['enabled']);
+        $this->assertSame('', $config['instruction']);
+
+        // Lockdown still applies; paste is open on forums for every student.
+        $this->assertTrue(access::should_lockdown($PAGE));
+        $options = lockdown_options::for_page($PAGE);
+        $this->assertFalse($options['block_paste']);
+        unset($options['block_paste']);
+        $this->assertNotContains(false, $options);
+    }
+
     public function test_setting_disables_forum_honeypot(): void {
         global $PAGE;
 

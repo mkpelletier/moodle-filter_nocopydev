@@ -35,4 +35,12 @@ $capabilities = [
             'manager' => CAP_ALLOW,
         ],
     ],
+
+    // Receive no honeypot (assessment arrangement). No archetype: grant it
+    // through a role assigned at system level, so course staff never see who holds it.
+    'filter/tripwire:skiphoneypot' => [
+        'captype' => 'read',
+        'contextlevel' => CONTEXT_MODULE,
+        'archetypes' => [],
+    ],
 ];

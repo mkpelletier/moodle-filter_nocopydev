@@ -79,5 +79,6 @@ $string['setting_restrictedroles'] = 'Roles to restrict';
 $string['setting_restrictedroles_desc'] = 'Users who hold one of these roles in the current course (or who have switched into one of them) cannot copy, paste, or use the context menu. Leave only Student ticked for the usual exam setup. Teachers reviewing or reporting on attempts are not locked. Preview quiz still is.';
 $string['setting_watermark_label'] = 'Selected-response watermark label';
 $string['setting_watermark_label_desc'] = 'Bland label used on multiple choice, true/false, and matching. Do not put the fictional citation here — a student who notices a watermark on a true/false item should not learn the honeypot title.';
+$string['tripwire:skiphoneypot'] = 'Receive no citation honeypot (assessment arrangement)';
 $string['tripwire:viewhoneypothits'] = 'See the honeypot title highlighted in student work';
 $string['watermark_label_default'] = 'Examination material';
