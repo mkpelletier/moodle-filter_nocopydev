@@ -37,7 +37,6 @@ $string['local_lockdown_heading'] = 'What to block';
 $string['local_lockdown_inherited_off'] = 'Inherited: allowed';
 $string['local_lockdown_inherited_on'] = 'Inherited: blocked';
 $string['local_lockdown_intro'] = 'Untick an action to allow it here and in everything inside this context (activity ← course ← category ← site). Each box starts at the value inherited from the parent. Only boxes you change are saved here, so later changes on the parent still reach this context. Applies to restricted roles only.';
-$string['migrated_from_nocopydev'] = 'Settings copied from No Copy / Dev Tools (filter_nocopydev), which has been disabled. Uninstall it from the plugins overview.';
 $string['noscriptwarning'] = 'JavaScript must be enabled to access this content. Please enable JavaScript in your browser and reload the page.';
 $string['privacy:metadata'] = 'The Tripwire filter does not store any personal data.';
 $string['setting_block_contextmenu'] = 'Block the right-click menu';
