@@ -15,11 +15,12 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Per-context (category, course, activity) honeypot settings.
+ * Per-context (category, course, activity) lockdown and honeypot settings.
  *
  * Discovered by filter/manage.php when a teacher opens Filters in a course
- * or quiz and clicks Settings next to No Copy / Dev Tools. Blank fields
- * inherit from the parent context or the site default.
+ * or activity and clicks Settings next to No Copy / Dev Tools. Lockdown
+ * boxes start at the inherited value; blank honeypot fields inherit from
+ * the parent context or the site default.
  *
  * @package    filter_nocopydev
  * @copyright  2026 Mathieu Pelletier
@@ -49,6 +50,26 @@ if (!class_exists(\core_filters\local_settings_form::class, false)) {
 class nocopydev_filter_local_settings_form extends \core_filters\local_settings_form {
     #[\Override]
     protected function definition_inner($mform) {
+        $mform->addElement('header', 'lockdownheader', get_string('local_lockdown_heading', 'filter_nocopydev'));
+        $mform->addElement('static', 'lockdownintro', '', get_string('local_lockdown_intro', 'filter_nocopydev'));
+
+        // Core only loads values saved on this context, so default each box
+        // to what it would inherit.
+        $inheritedoptions = \filter_nocopydev\lockdown_options::from_parent_context($this->context);
+        foreach (\filter_nocopydev\lockdown_options::OPTIONS as $option) {
+            $mform->addElement(
+                'advcheckbox',
+                $option,
+                get_string('setting_' . $option, 'filter_nocopydev'),
+                get_string(
+                    $inheritedoptions[$option] ? 'local_lockdown_inherited_on' : 'local_lockdown_inherited_off',
+                    'filter_nocopydev'
+                )
+            );
+            $mform->setDefault($option, $inheritedoptions[$option] ? 1 : 0);
+        }
+
+        $mform->addElement('header', 'honeypotheader', get_string('local_honeypot_heading', 'filter_nocopydev'));
         $mform->addElement(
             'static',
             'localintro',
@@ -116,6 +137,8 @@ class nocopydev_filter_local_settings_form extends \core_filters\local_settings_
     #[\Override]
     public function save_changes($data) {
         $data = (array) $data;
+        \filter_nocopydev\lockdown_options::save_local($this->context, $data);
+
         $off = !empty($data['honeypot_off']);
         if ($off) {
             filter_set_local_config($this->filter, $this->context->id, 'honeypot_off', '1');

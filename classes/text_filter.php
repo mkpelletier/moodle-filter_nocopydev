@@ -61,11 +61,10 @@ class text_filter extends \core_filters\text_filter {
             access::should_lockdown($page)
             && $page->requires->should_create_one_time_item_now('filter_nocopydev-lockdown')
         ) {
-            // Forum replies are often drafted elsewhere, and a pasted reply
-            // brings the honeypot back verbatim. Copying out stays blocked.
-            $page->requires->js_call_amd('filter_nocopydev/lockdown', 'init', [
-                ['allowpaste' => forum_mitigations::is_forum_page($page)],
-            ]);
+            $options = lockdown_options::for_page($page);
+            if (lockdown_options::any_blocked($options)) {
+                $page->requires->js_call_amd('filter_nocopydev/lockdown', 'init', [$options]);
+            }
         }
 
         if (

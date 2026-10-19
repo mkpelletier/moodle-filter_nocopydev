@@ -37,6 +37,48 @@ $settings->add(new admin_setting_pickroles(
     ['student']
 ));
 
+$settings->add(new admin_setting_configcheckbox(
+    'filter_nocopydev/block_copy',
+    get_string('setting_block_copy', 'filter_nocopydev'),
+    get_string('setting_block_copy_desc', 'filter_nocopydev'),
+    1
+));
+
+$settings->add(new admin_setting_configcheckbox(
+    'filter_nocopydev/block_cut',
+    get_string('setting_block_cut', 'filter_nocopydev'),
+    get_string('setting_block_cut_desc', 'filter_nocopydev'),
+    1
+));
+
+$settings->add(new admin_setting_configcheckbox(
+    'filter_nocopydev/block_paste',
+    get_string('setting_block_paste', 'filter_nocopydev'),
+    get_string('setting_block_paste_desc', 'filter_nocopydev'),
+    1
+));
+
+$settings->add(new admin_setting_configcheckbox(
+    'filter_nocopydev/block_selection',
+    get_string('setting_block_selection', 'filter_nocopydev'),
+    get_string('setting_block_selection_desc', 'filter_nocopydev'),
+    1
+));
+
+$settings->add(new admin_setting_configcheckbox(
+    'filter_nocopydev/block_contextmenu',
+    get_string('setting_block_contextmenu', 'filter_nocopydev'),
+    get_string('setting_block_contextmenu_desc', 'filter_nocopydev'),
+    1
+));
+
+$settings->add(new admin_setting_configcheckbox(
+    'filter_nocopydev/block_devtools',
+    get_string('setting_block_devtools', 'filter_nocopydev'),
+    get_string('setting_block_devtools_desc', 'filter_nocopydev'),
+    1
+));
+
 $settings->add(new admin_setting_heading(
     'filter_nocopydev/quizheading',
     get_string('setting_quizheading', 'filter_nocopydev'),

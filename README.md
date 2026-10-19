@@ -12,6 +12,7 @@ A Moodle filter plugin that prevents copy/paste, right-click context menus, and 
 - Works inside TinyMCE editors (hooks into TinyMCE's internal event system)
 - Displays a full-page blocking overlay when JavaScript is disabled
 - Per-context toggling: can be enabled/disabled at site, category, course, or activity level
+- Each blocked action (copy, cut, paste, selection, context menu, dev tools) can be allowed separately per context
 - Quiz-attempt layers by question type (citation honeypot on essays; forensic watermark on MCQ, true/false, matching, and short answer)
 - Citation honeypot on Q&A forum questions (paste stays allowed on forum pages)
 - Fictional title highlighted for markers wherever a student has written it
@@ -49,6 +50,14 @@ The filter can be set to:
 For exam security, a typical setup is to set it to "Off, but available" at the site level and enable it on specific quiz activities.
 
 Copy, paste, and the context menu are blocked only for the roles chosen under **Site administration → Plugins → Filters → No Copy / Dev Tools** (Student by default). Teachers reviewing or reporting on attempts are not locked unless they also have a restricted role in that course. **Preview quiz** (an in-progress attempt page) still applies the lockdown so staff can test the filter. **Switch role to Student** also applies it.
+
+### Choosing what to block
+
+Six actions can be allowed or blocked separately: **copy**, **cut**, **paste**, **text selection** (including Ctrl/Cmd+A), the **right-click menu**, and **developer tools shortcuts** (F12, Ctrl/Cmd+Shift+I/J/C, view source, save page). All are blocked by default.
+
+Site defaults are on the plugin settings page. To change them for one category, course, or activity, open **Filters → No Copy / Dev Tools → Settings** there. Each box starts at the inherited value; only boxes you change are saved, so a later change on the course still reaches activities that never chose. For example, untick **Block paste** on an essay quiz to let students paste a drafted answer while copy, cut, and dev tools stay blocked.
+
+Paste is always allowed on forum pages, whatever is set (see Q&A forums below). If every action is allowed in a context, the lockdown script is not loaded there.
 
 Print / “Save as PDF” from the print dialog is blanked with `@media print`. Safari **File → Export as PDF** does not use print CSS (it snapshots the screen). That path cannot be made blank without hiding the quiz from the student; a graphical Safari PDF will still show the questions and should carry the forensic watermark. Author colours in the stem (for example a red letter in a Hebrew gapfill) are left intact, and answer inputs nested in the stem stay typeable.
 

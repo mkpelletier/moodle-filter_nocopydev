@@ -1,5 +1,20 @@
 # Changelog
 
+## v1.3.0 (2026-10-19)
+
+### Added
+- Each lockdown action can be switched off separately: copy, cut, paste,
+  text selection, the right-click menu, and developer tools shortcuts.
+  All default to blocked. Set site defaults under the plugin settings and
+  override them per category, course, or activity under Filters →
+  No Copy / Dev Tools → Settings.
+- A context stores only the switches that differ from its parent, so a
+  later change on the course still reaches activities that never chose.
+
+### Changed
+- When every action is allowed in a context, the lockdown script is not
+  loaded at all. The noscript overlay and quiz/forum honeypots still run.
+
 ## v1.2.0 (2026-10-09)
 
 ### Added
