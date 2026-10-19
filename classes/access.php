@@ -14,12 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace filter_nocopydev;
+namespace filter_tripwire;
 
 /**
  * Role checks for the copy/paste lockdown.
  *
- * @package    filter_nocopydev
+ * @package    filter_tripwire
  * @copyright  2026 Mathieu Pelletier
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -85,7 +85,7 @@ class access {
      * @return int[]
      */
     public static function restricted_role_ids(): array {
-        $raw = get_config('filter_nocopydev', 'restrictedroles');
+        $raw = get_config('filter_tripwire', 'restrictedroles');
         if ($raw === false) {
             return self::student_role_ids();
         }

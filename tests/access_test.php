@@ -14,15 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace filter_nocopydev;
+namespace filter_tripwire;
 
 /**
  * Tests for role-based copy/paste lockdown.
  *
- * @package    filter_nocopydev
+ * @package    filter_tripwire
  * @copyright  2026 Mathieu Pelletier
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers     \filter_nocopydev\access
+ * @covers     \filter_tripwire\access
  */
 final class access_test extends \advanced_testcase {
     protected function setUp(): void {
@@ -44,7 +44,7 @@ final class access_test extends \advanced_testcase {
     }
 
     public function test_empty_restricted_roles_locks_nobody(): void {
-        set_config('restrictedroles', '', 'filter_nocopydev');
+        set_config('restrictedroles', '', 'filter_tripwire');
         $course = $this->getDataGenerator()->create_course();
         $context = \context_course::instance($course->id);
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');

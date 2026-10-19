@@ -14,15 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace filter_nocopydev;
+namespace filter_tripwire;
 
 /**
  * Tests for per-qtype mitigation policy.
  *
- * @package    filter_nocopydev
+ * @package    filter_tripwire
  * @copyright  2026 Mathieu Pelletier
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers     \filter_nocopydev\qtype_policy
+ * @covers     \filter_tripwire\qtype_policy
  */
 final class qtype_policy_test extends \advanced_testcase {
     public function test_essay_has_honeypot_shortanswer_does_not(): void {

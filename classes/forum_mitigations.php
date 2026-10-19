@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace filter_nocopydev;
+namespace filter_tripwire;
 
 /**
  * Builds the Q&A forum honeypot config.
@@ -24,7 +24,7 @@ namespace filter_nocopydev;
  * can only have come from the question. In every other forum type the first
  * student to take the bait publishes it to the rest of the class.
  *
- * @package    filter_nocopydev
+ * @package    filter_tripwire
  * @copyright  2026 Mathieu Pelletier
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -66,7 +66,7 @@ class forum_mitigations {
     }
 
     /**
-     * Config passed to filter_nocopydev/forum_mitigations#init.
+     * Config passed to filter_tripwire/forum_mitigations#init.
      *
      * Only restricted roles (Student by default) receive the bait, so staff
      * reading the thread never see or quote it. Switch role to Student to test.
@@ -105,7 +105,7 @@ class forum_mitigations {
         if ($json === false) {
             return;
         }
-        $modname = 'filter_nocopydev/forum_mitigations';
+        $modname = 'filter_tripwire/forum_mitigations';
         $page->requires->js_amd_inline(
             "M.util.js_pending('{$modname}'); require(['{$modname}'], function(amd) {" .
             "amd.init({$json}); M.util.js_complete('{$modname}');});"

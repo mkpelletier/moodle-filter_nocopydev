@@ -21,7 +21,7 @@
  * → site), and applies inside TinyMCE/Atto editors too. Editors remain
  * functional for typing and formatting (bold, italic, undo, etc).
  *
- * @module     filter_nocopydev/lockdown
+ * @module     filter_tripwire/lockdown
  * @copyright  2026 Mathieu Pelletier
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -184,10 +184,10 @@ const hideTinyClipboardNodes = (root) => {
  * @param {object} editor A TinyMCE editor instance.
  */
 const lockdownEditor = (editor) => {
-    if (editor.__nocopydevLocked) {
+    if (editor.__tripwireLocked) {
         return;
     }
-    editor.__nocopydevLocked = true;
+    editor.__tripwireLocked = true;
 
     const events = blockedNames(EVENT_OPTION);
     if (events.length) {
@@ -217,10 +217,10 @@ const installTinyPatch = () => {
     if (typeof window.tinymce === 'undefined') {
         return false;
     }
-    if (window.tinymce.__nocopydevPatched) {
+    if (window.tinymce.__tripwirePatched) {
         return true;
     }
-    window.tinymce.__nocopydevPatched = true;
+    window.tinymce.__tripwirePatched = true;
 
     const originalInit = window.tinymce.init.bind(window.tinymce);
     window.tinymce.init = (settings) => originalInit(patchTinySettings(settings));

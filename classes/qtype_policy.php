@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace filter_nocopydev;
+namespace filter_tripwire;
 
 /**
  * Per-qtype mitigation policy for quiz attempt pages.
@@ -24,7 +24,7 @@ namespace filter_nocopydev;
  * items leak through generation (the model writes the answer, so a citation
  * honeypot can come back in the script).
  *
- * @package    filter_nocopydev
+ * @package    filter_tripwire
  * @copyright  2026 Mathieu Pelletier
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

@@ -1,5 +1,18 @@
 # Changelog
 
+## v2.0.0 (2026-10-19)
+
+### Changed
+- Renamed from No Copy / Dev Tools (`filter_nocopydev`) to Tripwire
+  (`filter_tripwire`). Settings, capability, CSS classes and AMD modules
+  all use the new name.
+
+### Added
+- Installing Tripwire copies site settings, filter on/off states,
+  per-context citations and lockdown switches, and role overrides from
+  `filter_nocopydev`, then disables the old filter. Uninstall it
+  afterwards.
+
 ## v1.3.0 (2026-10-19)
 
 ### Added

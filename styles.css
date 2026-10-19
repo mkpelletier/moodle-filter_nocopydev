@@ -1,5 +1,5 @@
 /* stylelint-disable declaration-no-important -- print hide and camouflage must beat theme rules */
-.filter-nocopydev-honeypot {
+.filter-tripwire-honeypot {
     margin: 0;
     padding: 0;
     border: 0;
@@ -12,13 +12,13 @@
     pointer-events: none;
     user-select: none;
     -webkit-user-select: none;
-    color: var(--filter-nocopydev-camouflage, #fff) !important;
-    -webkit-text-fill-color: var(--filter-nocopydev-camouflage, #fff) !important;
+    color: var(--filter-tripwire-camouflage, #fff) !important;
+    -webkit-text-fill-color: var(--filter-tripwire-camouflage, #fff) !important;
     text-shadow: none !important;
 }
 
 /* Marker-only highlight of the fictional title in student work. */
-.filter-nocopydev-hit {
+.filter-tripwire-hit {
     padding: 0 0.15em;
     color: #000;
     background-color: #ffd866;
@@ -26,7 +26,7 @@
     border-radius: 2px;
 }
 
-.filter-nocopydev-watermark {
+.filter-tripwire-watermark {
     position: absolute;
     inset: 0;
     pointer-events: none;
@@ -39,14 +39,14 @@
 }
 
 @media (prefers-contrast: more) {
-    .filter-nocopydev-watermark,
-    .filter-nocopydev-honeypot {
+    .filter-tripwire-watermark,
+    .filter-tripwire-honeypot {
         display: none;
     }
 }
 
 @media print {
-    body.filter-nocopydev-quizattempt {
+    body.filter-tripwire-quizattempt {
         visibility: hidden !important;
     }
 }
@@ -59,11 +59,11 @@
  * (e.g. a red directional he) must remain visible, and nested gaps inherit
  * that ink.
  */
-body.filter-nocopydev-quizattempt .que input,
-body.filter-nocopydev-quizattempt .que textarea,
-body.filter-nocopydev-quizattempt .que select,
-body.filter-nocopydev-quizattempt .que [contenteditable="true"],
-body.filter-nocopydev-quizattempt .que .draggable {
+body.filter-tripwire-quizattempt .que input,
+body.filter-tripwire-quizattempt .que textarea,
+body.filter-tripwire-quizattempt .que select,
+body.filter-tripwire-quizattempt .que [contenteditable="true"],
+body.filter-tripwire-quizattempt .que .draggable {
     -webkit-user-select: text !important;
     user-select: text !important;
     position: relative;

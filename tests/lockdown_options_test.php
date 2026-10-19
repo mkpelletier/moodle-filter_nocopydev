@@ -14,15 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace filter_nocopydev;
+namespace filter_tripwire;
 
 /**
  * Tests for the per-context lockdown switches.
  *
- * @package    filter_nocopydev
+ * @package    filter_tripwire
  * @copyright  2026 Mathieu Pelletier
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers     \filter_nocopydev\lockdown_options
+ * @covers     \filter_tripwire\lockdown_options
  */
 final class lockdown_options_test extends \advanced_testcase {
     protected function setUp(): void {
@@ -40,7 +40,7 @@ final class lockdown_options_test extends \advanced_testcase {
     }
 
     public function test_site_setting_off_reaches_courses(): void {
-        set_config('block_paste', '0', 'filter_nocopydev');
+        set_config('block_paste', '0', 'filter_tripwire');
         $course = $this->getDataGenerator()->create_course();
         $values = lockdown_options::for_context(\context_course::instance($course->id));
 
@@ -54,8 +54,8 @@ final class lockdown_options_test extends \advanced_testcase {
         $coursecontext = \context_course::instance($course->id);
         $modcontext = \context_module::instance($quiz->cmid);
 
-        filter_set_local_config('nocopydev', $coursecontext->id, 'block_devtools', '0');
-        filter_set_local_config('nocopydev', $modcontext->id, 'block_copy', '0');
+        filter_set_local_config('tripwire', $coursecontext->id, 'block_devtools', '0');
+        filter_set_local_config('tripwire', $modcontext->id, 'block_copy', '0');
 
         $values = lockdown_options::for_context($modcontext);
         $this->assertFalse($values['block_devtools']);
@@ -63,7 +63,7 @@ final class lockdown_options_test extends \advanced_testcase {
         $this->assertTrue($values['block_cut']);
 
         // An activity can block again what its course allows.
-        filter_set_local_config('nocopydev', $modcontext->id, 'block_devtools', '1');
+        filter_set_local_config('tripwire', $modcontext->id, 'block_devtools', '1');
         lockdown_options::reset_caches();
         $this->assertTrue(lockdown_options::for_context($modcontext)['block_devtools']);
     }
@@ -79,11 +79,11 @@ final class lockdown_options_test extends \advanced_testcase {
         $data['block_paste'] = 0;
         lockdown_options::save_local($modcontext, $data);
 
-        $local = filter_get_local_config('nocopydev', $modcontext->id);
+        $local = filter_get_local_config('tripwire', $modcontext->id);
         $this->assertSame(['block_paste' => '0'], array_intersect_key($local, $data));
 
         // A later course change still reaches the quiz.
-        filter_set_local_config('nocopydev', $coursecontext->id, 'block_copy', '0');
+        filter_set_local_config('tripwire', $coursecontext->id, 'block_copy', '0');
         lockdown_options::reset_caches();
         $this->assertFalse(lockdown_options::for_context($modcontext)['block_copy']);
     }

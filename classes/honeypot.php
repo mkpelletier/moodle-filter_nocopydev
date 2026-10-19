@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace filter_nocopydev;
+namespace filter_tripwire;
 
 /**
  * Builds the constructed-response citation honeypot.
@@ -28,13 +28,13 @@ namespace filter_nocopydev;
  * inherit, so a Pauline course can plant a Wright title without affecting
  * systematics.
  *
- * @package    filter_nocopydev
+ * @package    filter_tripwire
  * @copyright  2026 Mathieu Pelletier
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class honeypot {
     /** Filter name as stored in filter_config (no filter_ prefix). */
-    public const FILTERNAME = 'nocopydev';
+    public const FILTERNAME = 'tripwire';
 
     /** Local/site config keys that make up the citation. */
     public const FIELDS = [
@@ -75,10 +75,10 @@ class honeypot {
      */
     public static function from_site_config(): self {
         return new self(
-            (string) get_config('filter_nocopydev', 'honeypot_author'),
-            (string) get_config('filter_nocopydev', 'honeypot_title'),
-            (string) get_config('filter_nocopydev', 'honeypot_venue'),
-            (string) get_config('filter_nocopydev', 'honeypot_claim'),
+            (string) get_config('filter_tripwire', 'honeypot_author'),
+            (string) get_config('filter_tripwire', 'honeypot_title'),
+            (string) get_config('filter_tripwire', 'honeypot_venue'),
+            (string) get_config('filter_tripwire', 'honeypot_claim'),
         );
     }
 
@@ -208,13 +208,13 @@ class honeypot {
             'claimsuffix' => '',
         ];
         if ($this->claim !== '') {
-            $data->claimsuffix = get_string('honeypot_claimsuffix', 'filter_nocopydev', $this->claim);
+            $data->claimsuffix = get_string('honeypot_claimsuffix', 'filter_tripwire', $this->claim);
         }
 
         if ($this->venue === '') {
-            return get_string('honeypot_instruction_novenue', 'filter_nocopydev', $data);
+            return get_string('honeypot_instruction_novenue', 'filter_tripwire', $data);
         }
-        return get_string('honeypot_instruction', 'filter_nocopydev', $data);
+        return get_string('honeypot_instruction', 'filter_tripwire', $data);
     }
 
     /**
@@ -271,7 +271,7 @@ class honeypot {
         }
 
         $pattern = $this->title_pattern();
-        $open = '<mark class="filter-nocopydev-hit" title="' . s(get_string('honeypot_hit', 'filter_nocopydev')) . '">';
+        $open = '<mark class="filter-tripwire-hit" title="' . s(get_string('honeypot_hit', 'filter_tripwire')) . '">';
         foreach ($segments as $index => $segment) {
             // Odd indexes are the captured tags.
             if ($index % 2 === 1 || $segment === '') {

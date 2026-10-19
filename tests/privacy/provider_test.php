@@ -14,19 +14,19 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace filter_nocopydev\privacy;
+namespace filter_tripwire\privacy;
 
 /**
  * Privacy provider tests.
  *
- * @package    filter_nocopydev
+ * @package    filter_tripwire
  * @copyright  2026 Mathieu Pelletier
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers     \filter_nocopydev\privacy\provider
+ * @covers     \filter_tripwire\privacy\provider
  */
 final class provider_test extends \core_privacy\tests\provider_testcase {
     public function test_get_reason(): void {
         $this->assertSame('privacy:metadata', provider::get_reason());
-        $this->assertNotEmpty(get_string(provider::get_reason(), 'filter_nocopydev'));
+        $this->assertNotEmpty(get_string(provider::get_reason(), 'filter_tripwire'));
     }
 }

@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace filter_nocopydev;
+namespace filter_tripwire;
 
 /**
  * Which lockdown actions are blocked in a context.
@@ -24,7 +24,7 @@ namespace filter_nocopydev;
  * A context stores a switch only when it differs from its parent, so a
  * later change on the course still reaches activities that never chose.
  *
- * @package    filter_nocopydev
+ * @package    filter_tripwire
  * @copyright  2026 Mathieu Pelletier
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -59,7 +59,7 @@ class lockdown_options {
     public static function site_defaults(): array {
         $values = [];
         foreach (self::OPTIONS as $option) {
-            $raw = get_config('filter_nocopydev', $option);
+            $raw = get_config('filter_tripwire', $option);
             $values[$option] = $raw === false || $raw === '' || (int) $raw === 1;
         }
         return $values;
@@ -133,7 +133,7 @@ class lockdown_options {
     }
 
     /**
-     * Options for filter_nocopydev/lockdown#init.
+     * Options for filter_tripwire/lockdown#init.
      *
      * Paste is always allowed on forum pages: replies are often drafted
      * elsewhere, and a pasted reply brings the honeypot back verbatim.

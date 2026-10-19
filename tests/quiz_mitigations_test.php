@@ -14,15 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace filter_nocopydev;
+namespace filter_tripwire;
 
 /**
  * Tests for quiz-attempt mitigation helpers.
  *
- * @package    filter_nocopydev
+ * @package    filter_tripwire
  * @copyright  2026 Mathieu Pelletier
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers     \filter_nocopydev\quiz_mitigations
+ * @covers     \filter_tripwire\quiz_mitigations
  */
 final class quiz_mitigations_test extends \advanced_testcase {
     protected function setUp(): void {
@@ -62,7 +62,7 @@ final class quiz_mitigations_test extends \advanced_testcase {
         $css = file_get_contents(dirname(__DIR__) . '/styles.css');
         $this->assertNotFalse($css);
         $this->assertStringNotContainsString('color: transparent', $css);
-        $this->assertStringNotContainsString('--filter-nocopydev-ink', $css);
+        $this->assertStringNotContainsString('--filter-tripwire-ink', $css);
         $this->assertStringNotContainsString('-webkit-text-fill-color: transparent', $css);
         $this->assertStringNotContainsString('color: inherit !important', $css);
         $this->assertStringContainsString('user-select: text', $css);
@@ -73,9 +73,9 @@ final class quiz_mitigations_test extends \advanced_testcase {
         global $PAGE, $USER;
 
         $this->setAdminUser();
-        set_config('honeypot_author', 'Craig Keener', 'filter_nocopydev');
-        set_config('honeypot_title', 'The Mercy Seat of the Nations', 'filter_nocopydev');
-        set_config('enable_quiz_mitigations', '1', 'filter_nocopydev');
+        set_config('honeypot_author', 'Craig Keener', 'filter_tripwire');
+        set_config('honeypot_title', 'The Mercy Seat of the Nations', 'filter_tripwire');
+        set_config('enable_quiz_mitigations', '1', 'filter_tripwire');
 
         $course = $this->getDataGenerator()->create_course();
         $context = \context_course::instance($course->id);

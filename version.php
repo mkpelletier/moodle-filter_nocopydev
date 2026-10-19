@@ -15,16 +15,16 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version information for filter_nocopydev.
+ * Version information for filter_tripwire.
  *
- * @package    filter_nocopydev
+ * @package    filter_tripwire
  * @copyright  2026 Mathieu Pelletier
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2026101900;
+$plugin->version   = 2026101910;
 $plugin->requires  = 2025040800;
-$plugin->release   = '1.3.0';
-$plugin->component = 'filter_nocopydev';
+$plugin->release   = '2.0.0';
+$plugin->component = 'filter_tripwire';

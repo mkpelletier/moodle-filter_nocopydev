@@ -14,12 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace filter_nocopydev;
+namespace filter_tripwire;
 
 /**
  * Builds the quiz-attempt AMD config and the per-attempt forensic token.
  *
- * @package    filter_nocopydev
+ * @package    filter_tripwire
  * @copyright  2026 Mathieu Pelletier
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -38,7 +38,7 @@ class quiz_mitigations {
     }
 
     /**
-     * Config passed to filter_nocopydev/quiz_mitigations#init.
+     * Config passed to filter_tripwire/quiz_mitigations#init.
      *
      * @param \moodle_page $page
      * @return array<string, mixed>
@@ -50,9 +50,9 @@ class quiz_mitigations {
         $attemptid = (int) $page->url->get_param('attempt');
         $token = self::forensic_token($attemptid, (int) $USER->id, (int) $page->context->id);
 
-        $label = trim((string) get_config('filter_nocopydev', 'watermark_label'));
+        $label = trim((string) get_config('filter_tripwire', 'watermark_label'));
         if ($label === '') {
-            $label = get_string('watermark_label_default', 'filter_nocopydev');
+            $label = get_string('watermark_label_default', 'filter_tripwire');
         }
 
         return [
@@ -83,7 +83,7 @@ class quiz_mitigations {
         if ($json === false) {
             return;
         }
-        $modname = 'filter_nocopydev/quiz_mitigations';
+        $modname = 'filter_tripwire/quiz_mitigations';
         $page->requires->js_amd_inline(
             "M.util.js_pending('{$modname}'); require(['{$modname}'], function(amd) {" .
             "amd.init({$json}); M.util.js_complete('{$modname}');});"
@@ -116,7 +116,7 @@ class quiz_mitigations {
      * @return bool
      */
     public static function config_enabled(string $name, bool $default = true): bool {
-        $raw = get_config('filter_nocopydev', $name);
+        $raw = get_config('filter_tripwire', $name);
         if ($raw === false || $raw === '') {
             return $default;
         }

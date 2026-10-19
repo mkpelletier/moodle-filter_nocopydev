@@ -14,15 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace filter_nocopydev;
+namespace filter_tripwire;
 
 /**
  * Tests for the text filter noscript overlay.
  *
- * @package    filter_nocopydev
+ * @package    filter_tripwire
  * @copyright  2026 Mathieu Pelletier
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers     \filter_nocopydev\text_filter
+ * @covers     \filter_tripwire\text_filter
  */
 final class text_filter_test extends \advanced_testcase {
     protected function setUp(): void {
@@ -77,8 +77,8 @@ final class text_filter_test extends \advanced_testcase {
         $course = $this->getDataGenerator()->create_course();
         $forum = $this->getDataGenerator()->create_module('forum', ['course' => $course->id, 'type' => 'qanda']);
         $context = \context_module::instance($forum->cmid);
-        filter_set_local_config('nocopydev', $context->id, 'honeypot_author', 'Craig Keener');
-        filter_set_local_config('nocopydev', $context->id, 'honeypot_title', 'The Mercy Seat of the Nations');
+        filter_set_local_config('tripwire', $context->id, 'honeypot_author', 'Craig Keener');
+        filter_set_local_config('tripwire', $context->id, 'honeypot_title', 'The Mercy Seat of the Nations');
         $post = '<p>Keener, in The Mercy Seat of the Nations, argues otherwise.</p>';
 
         $PAGE->set_url('/mod/forum/discuss.php', ['d' => 1]);

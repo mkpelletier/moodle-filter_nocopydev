@@ -14,15 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace filter_nocopydev;
+namespace filter_tripwire;
 
 /**
  * Tests for the citation honeypot.
  *
- * @package    filter_nocopydev
+ * @package    filter_tripwire
  * @copyright  2026 Mathieu Pelletier
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers     \filter_nocopydev\honeypot
+ * @covers     \filter_tripwire\honeypot
  */
 final class honeypot_test extends \advanced_testcase {
     protected function setUp(): void {
@@ -74,10 +74,10 @@ final class honeypot_test extends \advanced_testcase {
     }
 
     public function test_from_site_config(): void {
-        set_config('honeypot_author', 'Craig Keener', 'filter_nocopydev');
-        set_config('honeypot_title', 'The Mercy Seat of the Nations', 'filter_nocopydev');
-        set_config('honeypot_venue', 'JSNT 41 (2019)', 'filter_nocopydev');
-        set_config('honeypot_claim', '', 'filter_nocopydev');
+        set_config('honeypot_author', 'Craig Keener', 'filter_tripwire');
+        set_config('honeypot_title', 'The Mercy Seat of the Nations', 'filter_tripwire');
+        set_config('honeypot_venue', 'JSNT 41 (2019)', 'filter_tripwire');
+        set_config('honeypot_claim', '', 'filter_tripwire');
 
         $honeypot = honeypot::from_site_config();
         $this->assertTrue($honeypot->is_configured());
@@ -86,24 +86,24 @@ final class honeypot_test extends \advanced_testcase {
     }
 
     public function test_course_overrides_site_and_quiz_overrides_course(): void {
-        set_config('honeypot_author', 'Site Author', 'filter_nocopydev');
-        set_config('honeypot_title', 'Site Title', 'filter_nocopydev');
+        set_config('honeypot_author', 'Site Author', 'filter_tripwire');
+        set_config('honeypot_title', 'Site Title', 'filter_tripwire');
 
         $course = $this->getDataGenerator()->create_course();
         $quiz = $this->getDataGenerator()->create_module('quiz', ['course' => $course->id]);
         $coursecontext = \context_course::instance($course->id);
         $modcontext = \context_module::instance($quiz->cmid);
 
-        filter_set_local_config('nocopydev', $coursecontext->id, 'honeypot_author', 'Craig Keener');
-        filter_set_local_config('nocopydev', $coursecontext->id, 'honeypot_title', 'Course Title');
+        filter_set_local_config('tripwire', $coursecontext->id, 'honeypot_author', 'Craig Keener');
+        filter_set_local_config('tripwire', $coursecontext->id, 'honeypot_title', 'Course Title');
 
         $fromcourse = honeypot::from_context($coursecontext);
         $this->assertSame('Craig Keener', $fromcourse->author);
         $this->assertSame('Course Title', $fromcourse->title);
 
         honeypot::reset_caches();
-        filter_set_local_config('nocopydev', $modcontext->id, 'honeypot_author', 'Quiz Author');
-        filter_set_local_config('nocopydev', $modcontext->id, 'honeypot_title', 'Quiz Title');
+        filter_set_local_config('tripwire', $modcontext->id, 'honeypot_author', 'Quiz Author');
+        filter_set_local_config('tripwire', $modcontext->id, 'honeypot_title', 'Quiz Title');
 
         $fromquiz = honeypot::from_context($modcontext);
         $this->assertSame('Quiz Author', $fromquiz->author);
@@ -111,12 +111,12 @@ final class honeypot_test extends \advanced_testcase {
     }
 
     public function test_honeypot_off_blocks_site_fallback(): void {
-        set_config('honeypot_author', 'Site Author', 'filter_nocopydev');
-        set_config('honeypot_title', 'Site Title', 'filter_nocopydev');
+        set_config('honeypot_author', 'Site Author', 'filter_tripwire');
+        set_config('honeypot_title', 'Site Title', 'filter_tripwire');
 
         $course = $this->getDataGenerator()->create_course();
         $coursecontext = \context_course::instance($course->id);
-        filter_set_local_config('nocopydev', $coursecontext->id, 'honeypot_off', '1');
+        filter_set_local_config('tripwire', $coursecontext->id, 'honeypot_off', '1');
 
         $honeypot = honeypot::from_context($coursecontext);
         $this->assertFalse($honeypot->is_configured());
@@ -128,9 +128,9 @@ final class honeypot_test extends \advanced_testcase {
         $coursecontext = \context_course::instance($course->id);
         $modcontext = \context_module::instance($quiz->cmid);
 
-        filter_set_local_config('nocopydev', $coursecontext->id, 'honeypot_off', '1');
-        filter_set_local_config('nocopydev', $modcontext->id, 'honeypot_author', 'Quiz Author');
-        filter_set_local_config('nocopydev', $modcontext->id, 'honeypot_title', 'Quiz Title');
+        filter_set_local_config('tripwire', $coursecontext->id, 'honeypot_off', '1');
+        filter_set_local_config('tripwire', $modcontext->id, 'honeypot_author', 'Quiz Author');
+        filter_set_local_config('tripwire', $modcontext->id, 'honeypot_title', 'Quiz Title');
 
         $honeypot = honeypot::from_context($modcontext);
         $this->assertTrue($honeypot->is_configured());
@@ -145,7 +145,7 @@ final class honeypot_test extends \advanced_testcase {
             . '<em>paul\'s&nbsp;gospel &amp; the  nations</em>, the point stands.</p>';
         $out = $honeypot->highlight_in($html);
 
-        $this->assertSame(1, substr_count($out, '<mark class="filter-nocopydev-hit"'));
+        $this->assertSame(1, substr_count($out, '<mark class="filter-tripwire-hit"'));
         $this->assertStringContainsString('>paul\'s&nbsp;gospel &amp; the  nations</mark>', $out);
         // The attribute copy of the title is left alone.
         $this->assertStringContainsString('<p title="Paul’s Gospel &amp; the Nations">', $out);

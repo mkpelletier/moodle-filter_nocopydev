@@ -18,11 +18,11 @@
  * Per-context (category, course, activity) lockdown and honeypot settings.
  *
  * Discovered by filter/manage.php when a teacher opens Filters in a course
- * or activity and clicks Settings next to No Copy / Dev Tools. Lockdown
+ * or activity and clicks Settings next to Tripwire. Lockdown
  * boxes start at the inherited value; blank honeypot fields inherit from
  * the parent context or the site default.
  *
- * @package    filter_nocopydev
+ * @package    filter_tripwire
  * @copyright  2026 Mathieu Pelletier
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -39,72 +39,72 @@ if (!class_exists(\core_filters\local_settings_form::class, false)) {
 }
 
 /**
- * Local settings form for filter_nocopydev.
+ * Local settings form for filter_tripwire.
  *
  * Class name is required by filter/manage.php.
  *
- * @package    filter_nocopydev
+ * @package    filter_tripwire
  * @copyright  2026 Mathieu Pelletier
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class nocopydev_filter_local_settings_form extends \core_filters\local_settings_form {
+class tripwire_filter_local_settings_form extends \core_filters\local_settings_form {
     #[\Override]
     protected function definition_inner($mform) {
-        $mform->addElement('header', 'lockdownheader', get_string('local_lockdown_heading', 'filter_nocopydev'));
-        $mform->addElement('static', 'lockdownintro', '', get_string('local_lockdown_intro', 'filter_nocopydev'));
+        $mform->addElement('header', 'lockdownheader', get_string('local_lockdown_heading', 'filter_tripwire'));
+        $mform->addElement('static', 'lockdownintro', '', get_string('local_lockdown_intro', 'filter_tripwire'));
 
         // Core only loads values saved on this context, so default each box
         // to what it would inherit.
-        $inheritedoptions = \filter_nocopydev\lockdown_options::from_parent_context($this->context);
-        foreach (\filter_nocopydev\lockdown_options::OPTIONS as $option) {
+        $inheritedoptions = \filter_tripwire\lockdown_options::from_parent_context($this->context);
+        foreach (\filter_tripwire\lockdown_options::OPTIONS as $option) {
             $mform->addElement(
                 'advcheckbox',
                 $option,
-                get_string('setting_' . $option, 'filter_nocopydev'),
+                get_string('setting_' . $option, 'filter_tripwire'),
                 get_string(
                     $inheritedoptions[$option] ? 'local_lockdown_inherited_on' : 'local_lockdown_inherited_off',
-                    'filter_nocopydev'
+                    'filter_tripwire'
                 )
             );
             $mform->setDefault($option, $inheritedoptions[$option] ? 1 : 0);
         }
 
-        $mform->addElement('header', 'honeypotheader', get_string('local_honeypot_heading', 'filter_nocopydev'));
+        $mform->addElement('header', 'honeypotheader', get_string('local_honeypot_heading', 'filter_tripwire'));
         $mform->addElement(
             'static',
             'localintro',
             '',
-            get_string('local_honeypot_intro', 'filter_nocopydev')
+            get_string('local_honeypot_intro', 'filter_tripwire')
         );
 
-        $inherited = \filter_nocopydev\honeypot::from_parent_context($this->context);
+        $inherited = \filter_tripwire\honeypot::from_parent_context($this->context);
         if ($inherited->is_configured()) {
             $mform->addElement(
                 'static',
                 'inherited',
-                get_string('local_honeypot_inherited', 'filter_nocopydev'),
+                get_string('local_honeypot_inherited', 'filter_tripwire'),
                 s($inherited->short_label())
             );
         } else {
             $mform->addElement(
                 'static',
                 'inherited',
-                get_string('local_honeypot_inherited', 'filter_nocopydev'),
-                get_string('local_honeypot_inherited_none', 'filter_nocopydev')
+                get_string('local_honeypot_inherited', 'filter_tripwire'),
+                get_string('local_honeypot_inherited_none', 'filter_tripwire')
             );
         }
 
         $mform->addElement(
             'advcheckbox',
             'honeypot_off',
-            get_string('local_honeypot_off', 'filter_nocopydev'),
-            get_string('local_honeypot_off_desc', 'filter_nocopydev')
+            get_string('local_honeypot_off', 'filter_tripwire'),
+            get_string('local_honeypot_off_desc', 'filter_tripwire')
         );
 
         $mform->addElement(
             'text',
             'honeypot_author',
-            get_string('setting_honeypot_author', 'filter_nocopydev'),
+            get_string('setting_honeypot_author', 'filter_tripwire'),
             ['size' => 40]
         );
         $mform->setType('honeypot_author', PARAM_TEXT);
@@ -112,7 +112,7 @@ class nocopydev_filter_local_settings_form extends \core_filters\local_settings_
         $mform->addElement(
             'text',
             'honeypot_title',
-            get_string('setting_honeypot_title', 'filter_nocopydev'),
+            get_string('setting_honeypot_title', 'filter_tripwire'),
             ['size' => 40]
         );
         $mform->setType('honeypot_title', PARAM_TEXT);
@@ -120,7 +120,7 @@ class nocopydev_filter_local_settings_form extends \core_filters\local_settings_
         $mform->addElement(
             'text',
             'honeypot_venue',
-            get_string('setting_honeypot_venue', 'filter_nocopydev'),
+            get_string('setting_honeypot_venue', 'filter_tripwire'),
             ['size' => 40]
         );
         $mform->setType('honeypot_venue', PARAM_TEXT);
@@ -128,7 +128,7 @@ class nocopydev_filter_local_settings_form extends \core_filters\local_settings_
         $mform->addElement(
             'textarea',
             'honeypot_claim',
-            get_string('setting_honeypot_claim', 'filter_nocopydev'),
+            get_string('setting_honeypot_claim', 'filter_tripwire'),
             ['rows' => 3, 'cols' => 40]
         );
         $mform->setType('honeypot_claim', PARAM_TEXT);
@@ -137,7 +137,7 @@ class nocopydev_filter_local_settings_form extends \core_filters\local_settings_
     #[\Override]
     public function save_changes($data) {
         $data = (array) $data;
-        \filter_nocopydev\lockdown_options::save_local($this->context, $data);
+        \filter_tripwire\lockdown_options::save_local($this->context, $data);
 
         $off = !empty($data['honeypot_off']);
         if ($off) {
@@ -146,7 +146,7 @@ class nocopydev_filter_local_settings_form extends \core_filters\local_settings_
             filter_unset_local_config($this->filter, $this->context->id, 'honeypot_off');
         }
 
-        foreach (\filter_nocopydev\honeypot::FIELDS as $name) {
+        foreach (\filter_tripwire\honeypot::FIELDS as $name) {
             $value = isset($data[$name]) ? trim((string) $data[$name]) : '';
             if ($value !== '') {
                 filter_set_local_config($this->filter, $this->context->id, $name, $value);

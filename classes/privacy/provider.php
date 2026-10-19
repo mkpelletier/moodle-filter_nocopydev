@@ -15,14 +15,14 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Privacy provider for filter_nocopydev.
+ * Privacy provider for filter_tripwire.
  *
- * @package    filter_nocopydev
+ * @package    filter_tripwire
  * @copyright  2026 Mathieu Pelletier
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace filter_nocopydev\privacy;
+namespace filter_tripwire\privacy;
 
 /**
  * Privacy provider - this filter does not store personal data.

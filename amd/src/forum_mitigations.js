@@ -20,12 +20,12 @@
  * Peer posts are left alone: a Q&A forum hides them until the student has
  * answered, so the bait can only come back from the question itself.
  *
- * @module     filter_nocopydev/forum_mitigations
+ * @module     filter_tripwire/forum_mitigations
  * @copyright  2026 Mathieu Pelletier
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-import {injectHoneypot} from 'filter_nocopydev/camouflage';
+import {injectHoneypot} from 'filter_tripwire/camouflage';
 
 /**
  * Initialise the forum honeypot.

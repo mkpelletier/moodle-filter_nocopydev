@@ -22,17 +22,17 @@
  * Selected response (MCQ, true/false, matching): forensic watermark and
  * print blocking only. A canary cannot appear in a click-to-answer submission.
  *
- * @module     filter_nocopydev/quiz_mitigations
+ * @module     filter_tripwire/quiz_mitigations
  * @copyright  2026 Mathieu Pelletier
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 /* eslint-disable camelcase -- PHP qtype policy keys use Moodle snake_case. */
 
-import {injectHoneypot, parseRgb} from 'filter_nocopydev/camouflage';
+import {injectHoneypot, parseRgb} from 'filter_tripwire/camouflage';
 
-const ENHANCED_ATTR = 'data-nocopydev-mitigated';
-const CONFIG_ID = 'filter-nocopydev-quiz-config';
+const ENHANCED_ATTR = 'data-tripwire-mitigated';
+const CONFIG_ID = 'filter-tripwire-quiz-config';
 
 const DEFAULT_POLICY = {
     dom_honeypot: false,
@@ -58,7 +58,7 @@ export const init = (config) => {
         return;
     }
 
-    document.body.classList.add('filter-nocopydev-quizattempt');
+    document.body.classList.add('filter-tripwire-quizattempt');
 
     if (shouldBlockPrint(config)) {
         blockPrint();
@@ -211,7 +211,7 @@ const watermarkText = (policy, config) => {
  * @param {string} text
  */
 const injectWatermark = (cover, text) => {
-    if (!text || cover.querySelector(':scope > .filter-nocopydev-watermark')) {
+    if (!text || cover.querySelector(':scope > .filter-tripwire-watermark')) {
         return;
     }
 
@@ -221,7 +221,7 @@ const injectWatermark = (cover, text) => {
     }
 
     const overlay = document.createElement('div');
-    overlay.className = 'filter-nocopydev-watermark';
+    overlay.className = 'filter-tripwire-watermark';
     overlay.setAttribute('aria-hidden', 'true');
     overlay.style.backgroundImage = svgTiling(text, inkColor(cover));
     cover.insertBefore(overlay, cover.firstChild);

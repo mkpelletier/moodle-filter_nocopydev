@@ -38,8 +38,8 @@ purge_53() {
     echo "Purged caches: $root"
 }
 
-sync_tree "/Users/mathieu/Sites/moodle/prod507/filter/nocopydev"
+sync_tree "/Users/mathieu/Sites/moodle/prod507/filter/tripwire"
 purge_50 "/Users/mathieu/Sites/moodle/prod507"
 
-sync_tree "/Users/mathieu/Sites/moodle/dev53/public/filter/nocopydev"
+sync_tree "/Users/mathieu/Sites/moodle/dev53/public/filter/tripwire"
 purge_53 "/Users/mathieu/Sites/moodle/dev53"

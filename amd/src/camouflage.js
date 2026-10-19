@@ -16,12 +16,12 @@
 /**
  * Camouflaged citation honeypot shared by the quiz and forum mitigations.
  *
- * @module     filter_nocopydev/camouflage
+ * @module     filter_tripwire/camouflage
  * @copyright  2026 Mathieu Pelletier
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-const HONEYPOT_CLASS = 'filter-nocopydev-honeypot';
+const HONEYPOT_CLASS = 'filter-tripwire-honeypot';
 
 /**
  * Same-colour-as-background paragraph at the end of the host.
@@ -44,7 +44,7 @@ export const injectHoneypot = (host, instruction) => {
     const para = document.createElement('p');
     para.className = HONEYPOT_CLASS;
     para.textContent = instruction;
-    para.style.setProperty('--filter-nocopydev-camouflage', camouflage);
+    para.style.setProperty('--filter-tripwire-camouflage', camouflage);
     para.style.color = camouflage;
     host.appendChild(para);
 };

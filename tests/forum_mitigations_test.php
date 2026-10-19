@@ -14,15 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace filter_nocopydev;
+namespace filter_tripwire;
 
 /**
  * Tests for the Q&A forum honeypot config.
  *
- * @package    filter_nocopydev
+ * @package    filter_tripwire
  * @copyright  2026 Mathieu Pelletier
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers     \filter_nocopydev\forum_mitigations
+ * @covers     \filter_tripwire\forum_mitigations
  */
 final class forum_mitigations_test extends \advanced_testcase {
     protected function setUp(): void {
@@ -50,8 +50,8 @@ final class forum_mitigations_test extends \advanced_testcase {
         ]);
 
         $context = \context_module::instance($forum->cmid);
-        filter_set_local_config('nocopydev', $context->id, 'honeypot_author', 'Craig Keener');
-        filter_set_local_config('nocopydev', $context->id, 'honeypot_title', 'The Mercy Seat of the Nations');
+        filter_set_local_config('tripwire', $context->id, 'honeypot_author', 'Craig Keener');
+        filter_set_local_config('tripwire', $context->id, 'honeypot_title', 'The Mercy Seat of the Nations');
 
         $PAGE = new \moodle_page();
         $PAGE->set_url('/mod/forum/discuss.php', ['d' => $discussion->id]);
@@ -117,7 +117,7 @@ final class forum_mitigations_test extends \advanced_testcase {
         $course = $this->getDataGenerator()->create_course();
         $this->set_up_forum_page($course, 'qanda');
         $this->setUser($this->getDataGenerator()->create_and_enrol($course, 'student'));
-        set_config('enable_forum_honeypot', '0', 'filter_nocopydev');
+        set_config('enable_forum_honeypot', '0', 'filter_tripwire');
 
         $this->assertFalse(forum_mitigations::js_config($PAGE)['enabled']);
     }

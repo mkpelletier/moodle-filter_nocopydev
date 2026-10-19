@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace filter_nocopydev;
+namespace filter_tripwire;
 
 /**
  * Filter that injects JavaScript to prevent copy/paste and developer tools access.
@@ -25,7 +25,7 @@ namespace filter_nocopydev;
  * The filter() method injects a <noscript> overlay to block access when JS is disabled,
  * and highlights the fictional honeypot title for markers.
  *
- * @package    filter_nocopydev
+ * @package    filter_tripwire
  * @copyright  2026 Mathieu Pelletier
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -53,30 +53,30 @@ class text_filter extends \core_filters\text_filter {
         // though the filter is off for the page itself. The lockdown is page-scoped,
         // so it must reflect the page context's effective state.
         $activefilters = filter_get_active_in_context($page->context);
-        if (!isset($activefilters['nocopydev'])) {
+        if (!isset($activefilters['tripwire'])) {
             return;
         }
 
         if (
             access::should_lockdown($page)
-            && $page->requires->should_create_one_time_item_now('filter_nocopydev-lockdown')
+            && $page->requires->should_create_one_time_item_now('filter_tripwire-lockdown')
         ) {
             $options = lockdown_options::for_page($page);
             if (lockdown_options::any_blocked($options)) {
-                $page->requires->js_call_amd('filter_nocopydev/lockdown', 'init', [$options]);
+                $page->requires->js_call_amd('filter_tripwire/lockdown', 'init', [$options]);
             }
         }
 
         if (
             quiz_mitigations::is_attempt_page($page)
-            && $page->requires->should_create_one_time_item_now('filter_nocopydev-quiz-mitigations')
+            && $page->requires->should_create_one_time_item_now('filter_tripwire-quiz-mitigations')
         ) {
             quiz_mitigations::require_amd($page);
         }
 
         if (
             forum_mitigations::is_forum_page($page)
-            && $page->requires->should_create_one_time_item_now('filter_nocopydev-forum-mitigations')
+            && $page->requires->should_create_one_time_item_now('filter_tripwire-forum-mitigations')
         ) {
             forum_mitigations::require_amd($page);
         }
@@ -94,7 +94,7 @@ class text_filter extends \core_filters\text_filter {
             if (!($PAGE instanceof \moodle_page) || !access::should_lockdown($PAGE)) {
                 return $text;
             }
-            $warning = get_string('noscriptwarning', 'filter_nocopydev');
+            $warning = get_string('noscriptwarning', 'filter_tripwire');
             $noscript = '<noscript><div style="position:fixed;top:0;left:0;width:100%;height:100%;'
                 . 'background:#fff;z-index:999999;display:flex;align-items:center;justify-content:center;'
                 . 'font-size:1.5rem;padding:2rem;text-align:center;">'
@@ -119,7 +119,7 @@ class text_filter extends \core_filters\text_filter {
             return $text;
         }
         $honeypot = honeypot::from_context($this->context);
-        if (!$honeypot->is_configured() || !has_capability('filter/nocopydev:viewhoneypothits', $this->context)) {
+        if (!$honeypot->is_configured() || !has_capability('filter/tripwire:viewhoneypothits', $this->context)) {
             return $text;
         }
         return $honeypot->highlight_in($text);
