@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copy this plugin into the local Moodle 5.0.7 and 5.3 trees and purge caches.
+# Copy this plugin into the local Moodle 5.3 tree and purge caches.
 # Required during development because version.php is not bumped on every change,
 # so Moodle will otherwise keep stale JS, language strings, and class maps.
 set -e
@@ -26,20 +26,11 @@ sync_tree() {
     echo "Synced $dest"
 }
 
-purge_50() {
-    root="$1"
-    "$PHP" "$root/admin/cli/purge_caches.php"
-    echo "Purged caches: $root"
-}
-
 purge_53() {
     root="$1"
     "$PHP" "$root/bin/moodle" admin:purge-caches
     echo "Purged caches: $root"
 }
-
-sync_tree "/Users/mathieu/Sites/moodle/prod507/filter/tripwire"
-purge_50 "/Users/mathieu/Sites/moodle/prod507"
 
 sync_tree "/Users/mathieu/Sites/moodle/dev53/public/filter/tripwire"
 purge_53 "/Users/mathieu/Sites/moodle/dev53"

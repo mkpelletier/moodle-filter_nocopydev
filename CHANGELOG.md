@@ -7,6 +7,7 @@
   (`filter_tripwire`). Settings, capability, CSS classes and AMD modules
   all use the new name. Moodle installs it as a new plugin: settings from
   `filter_nocopydev` are not carried over.
+- Requires Moodle 5.1 or later. Moodle 5.0 has reached end of life.
 
 ### Added
 - Capability `filter/tripwire:skiphoneypot` excuses a user from the quiz and

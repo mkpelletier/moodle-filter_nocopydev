@@ -22,7 +22,7 @@ Formerly **No Copy / Dev Tools** (`filter_nocopydev`).
 
 ## Automated tests
 
-PHPUnit tests live in `tests/`. GitHub Actions runs the standard [moodle-plugin-ci](https://github.com/moodlehq/moodle-plugin-ci) suite (phplint, phpcs, phpdoc, validate, savepoints, mustache, grunt, PHPUnit, Behat) against Moodle 5.0–5.2 on PHP 8.2/8.3 with PostgreSQL and MariaDB. See `.github/workflows/ci.yml`.
+PHPUnit tests live in `tests/`. GitHub Actions runs the standard [moodle-plugin-ci](https://github.com/moodlehq/moodle-plugin-ci) suite (phplint, phpcs, phpdoc, validate, savepoints, mustache, grunt, PHPUnit, Behat) against Moodle 5.1–5.3 on PHP 8.2/8.3 with PostgreSQL and MariaDB. See `.github/workflows/ci.yml`.
 
 Locally, sync into a Moodle test site, then from that site’s root (after `php public/admin/tool/phpunit/cli/init.php` if the suite is missing):
 
@@ -32,7 +32,7 @@ php vendor/bin/phpunit --testsuite filter_tripwire_testsuite
 
 ## Requirements
 
-- Moodle 5.0+ (PHP 8.2+)
+- Moodle 5.1+ (PHP 8.2+)
 
 ## Installation
 
@@ -40,7 +40,7 @@ php vendor/bin/phpunit --testsuite filter_tripwire_testsuite
 2. Visit **Site administration > Notifications** to install the plugin
 3. Enable the filter at **Site administration > Plugins > Filters > Manage filters**
 
-During development, after copying new JavaScript or language strings (especially when `version.php` has not changed), purge caches or Moodle will keep the old files. Local shortcut: `scripts/sync-local.sh` (rsyncs into the 5.0.7 and 5.3 trees and purges both).
+During development, after copying new JavaScript or language strings (especially when `version.php` has not changed), purge caches or Moodle will keep the old files. Local shortcut: `scripts/sync-local.sh` (rsyncs into the local 5.3 tree and purges its caches).
 
 ## Configuration
 

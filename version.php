@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2026101911;
-$plugin->requires  = 2025040800;
+$plugin->version   = 2026101912;
+$plugin->requires  = 2025100600;
 $plugin->release   = '2.0.0';
 $plugin->component = 'filter_tripwire';
